@@ -1,6 +1,4 @@
-# Client Retention Analytics
-
-## Churn Prediction
+# Premium Client Churn Prediction
 
 ## Project Installation
 
@@ -63,10 +61,49 @@ Install requirements (for the VM)
 pip install -r vm_requirements.txt
 ```
 
-Now! We execute the main.py as a background process.
+Now! We execute the main.py as a background process. The output will be saved on the vm_execution.log.
 ```bash
-# Cool way
+# With this, we send the process to background
 nohup python3 -u main.py > vm_execution.log 2>&1 &
 ```
 
-Finish! Thanks for reading.
+### Bonus
+
+To check all the executed commands previously.
+```bash
+history
+```
+
+To execute an specific command (with a specific history number)
+```bash
+!15
+```
+
+To check all processes that are being processed
+```bash
+ps aux
+
+# To get only info related to a specific PID (Process ID)
+ps aux | grep 1234
+```
+
+To terminate a process execution for a PID.
+```bash
+kill 1234
+```
+
+To check how our process is working...
+```bash
+tail -f vm_execution.log
+```
+
+To edit a file in our console.
+
+```bash
+nano my_file.txt
+```
+
+* `Ctrl + O` Saving a file
+* `Ctrl + X` Exit
+
+That's all folks!
