@@ -1,0 +1,33 @@
+lgbm_train_test.py
+
+PROCESOS PRINCIPALES = EXPERIMENTOS / BAYESIANA / ENTRENAMIENTO FINAL
+PROCESOS_INTERNOS de experimentos y entrenamiento final= 1rst_train (models_lgbm / feat_importances / graf_curva_ganancia/ umbrales_curva_ganancia) /  final_train(models_lgbm / feat_imp / predicciones06)
+PROCESOS_INTERNOS de bayesiana = best_iter / best_params / db / grafico_bayesiana
+
+COMENTARIO  
+    EXP -> Que se hace en el experimentos
+    ENT FINAL -> Quizas Que se hace en el experimentos, en IDENTIFICADOR lo ponemos el experimento, asi que quizas el mismo comentario que EXP
+    BAYESIANA -> Tambien vamos a identificarlo por el experimento, y quizas un comentario para aclarar con cuantos meses se hizo la optimizacion
+
+
+FECHA + PROCESO PPAL_IDENTIFICADOR + SEMILLA + PROCESO_INTERNO + COMENTARIO
+
+
+EXPERIMENTOS:
+FECHA + EXPERIMENTO_1 + 5222 + models_lgbm + ensamble
+FECHA + EXPERIMENTO_1  + Histograma_ganan + ensamble --> la semilla va como titulo en cada grafico
+FECHA + EXPERIMENTO_1  + Histograma_ganan + ensamble
+BAYESIANA:
+
+ENTRENAMIENTO_FINAL:
+
+
+
+
+    entrenamiento_lgbm() --> Agrege un parametro de la semilla para pasar
+                         --> Agregue un parametro para pasar el output_path
+                         --> Saque el parametro de la fecha porque ya viene en el name
+    grafico_feature_importance() --> Agregue un parametro para pasar el output_path
+                                --> Saque un parametro que era trheshold, ni se por qué lo decia
+                                --> Saque el parametro de la fecha porque ya viene en el name
+    config --> Reorganicé las carpetas de los outputs. Separé en finales outputs separe las carpetas para los graficos histogramas ganancia y curva ganancia 
