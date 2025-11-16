@@ -154,3 +154,5 @@
 {"fecha": "2025-11-14_23-09-08", "competencia": 2, "proceso_ppal": "creacion_target_clase_ternaria", "n_experimento": "prueba_zlgbm_2", "n_semillas": [], "in_gcp": true}
 {"fecha": "2025-11-14_23-25-14", "competencia": 2, "proceso_ppal": "feat_eng", "n_experimento": "prueba_zlgbm_2", "n_semillas": [], "in_gcp": true}
 {"fecha": "2025-11-15_00-53-35", "competencia": 2, "proceso_ppal": "feat_eng", "n_experimento": "prueba_zlgbm_2", "n_semillas": [], "in_gcp": true}
+{"fecha": "2025-11-15_13-53-31", "competencia": 2, "proceso_ppal": "feat_eng", "n_experimento": "prueba_zlgbm_2", "n_semillas": [], "in_gcp": true}
+{"fecha": "2025-11-15_15-05-23", "competencia": 2, "proceso_ppal": "bayesiana", "n_experimento": "prueba_zlgbm_2", "n_semillas": 1, "in_gcp": true}

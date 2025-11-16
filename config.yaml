@@ -6,7 +6,7 @@ COMPETENCIA: 2
     # 3- bayesiana  | test_baye 
     # 4- experimento |  test_exp
     # 5- prediccion_final | test_prediccion_final |
-PROCESO_PPAL: "feat_eng"
+PROCESO_PPAL: "bayesiana"
 # SUSBAMPLEO EN PORCENTAJE
 SUBSAMPLEO : 0.1 # solo para baye y exp y pred final
 
