@@ -6,7 +6,7 @@ COMPETENCIA: 2
     # 3- bayesiana  | test_baye 
     # 4- experimento |  test_exp
     # 5- prediccion_final | test_prediccion_final |
-PROCESO_PPAL: "feat_eng"
+PROCESO_PPAL: "experimento"
 # SUSBAMPLEO EN PORCENTAJE
 SUBSAMPLEO : 0.1 # solo para baye y exp y pred final
 
@@ -48,7 +48,7 @@ configuracion_canaritos:
   EARLY_STOPPING_ROUNDS : 200
 
 configuracion_experimentos:
-  N_EXPERIMENTO : "prueba_zlgbm_2"
+  N_EXPERIMENTO : "prueba_1_zlightgbm"
   N_SEMILLAS_EXP : 5
   TOP_MODELS : 1 # ZS =1
   MODEL_EXP : "lgbm" #| "lgbm"
@@ -113,7 +113,12 @@ configuracion_competencia_1:
 configuracion_competencia_2:
   FILE_INPUT_DATA: "datasets/competencia_02.csv"
   FILE_INPUT_DATA_CRUDO: "datasets/competencia_02_crudo.csv.gz"
-  MES_TRAIN: [202009,202010,202011,202012,202101,202102] #AGREGAR EL DEL VAL BAYESIANA Faltan:[202003,202004,202005,202006,202007,202008,202009,202010]
+  MES_TRAIN: [202009,202010,202011,202012,202101,202102]
+  # zLightGBM
+  MES_TEST: [202104,202106]
+  MES_TRAIN_04: [202009,202010,202011,202012,202101,202102]
+  MES_TRAIN_06: [202009,202010,202011,202012,202101,202102,202103,202104]
+  MES_TRAIN_08: [202009,202010,202011,202012,202101,202102,202103,202104,202105,202106]
   MES_TEST: [202104,202106]
   MES_A_PREDECIR: 202108
   MES_01: 202101
@@ -121,3 +126,4 @@ configuracion_competencia_2:
   MES_03: 202103
   MES_04: 202104
   MES_05: 202105
+
