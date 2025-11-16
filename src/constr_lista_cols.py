@@ -137,11 +137,10 @@ def cols_a_dropear_variable_entera(df: pd.DataFrame, columnas_base: list[str]) -
     """
     logger.info(f"Comienzo de la seleccion de la variable {columnas_base} ENTERA y todas sus derivadas para ELIMINAR")
     
-
-    cols_a_dropear = list({c for c in df.columns for col_drop in columnas_base if c.startswith(col_drop)})
+    cols_a_dropear = [c for c in df.columns for variable in columnas_base if variable in c]
     if len(cols_a_dropear)==0:
         logger.warning(f"No se encontro ninguna de las columnas en el df")
-    logger.info(f"Fin del proceso de la seleccion de la variable entera y todas sus derivadas para ELIMINAR")
+    logger.info(f"Fin del proceso de la seleccion de la variable entera y todas sus derivadas para ELIMINAR: {cols_a_dropear}")
     
     return cols_a_dropear
 
@@ -157,7 +156,10 @@ def cols_a_dropear_variable_por_feat(df: pd.DataFrame, columnas_variables: list[
 
     return cols_a_dropear
 
-
+def contrs_cols_dropear_por_features_sufijos(df:pd.DataFrame,cols_features_sufijos:list[str]):
+    logger.info(f"Comienzo de la seleccion de cols a dropear por features sufijos: {cols_features_sufijos}")
+    cols_a_dropear=[c for c in df.columns for fs in cols_features_sufijos if fs in c]
+    return cols_a_dropear
 
 
 def contrs_cols_dropear_feat_imp(df:pd.DataFrame , file:str , threshold:float)->list[str]:
