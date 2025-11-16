@@ -127,6 +127,9 @@ try:
         path_output_exp_prediction             = PLACE_PATHS + out_exp["PATH_OUTPUT_EXP_PREDICTION"]
         # ================= MESES ==============
         MES_TRAIN      = comp.get("MES_TRAIN", [202101, 202102, 202103])
+        MES_TRAIN_04      = comp.get("MES_TRAIN_04", [202101, 202102, 202103])
+        MES_TRAIN_06      = comp.get("MES_TRAIN_06", [202101, 202102, 202103])
+        MES_TRAIN_08      = comp.get("MES_TRAIN_08", [202101, 202102, 202103])
         MES_TEST       = comp.get("MES_TEST", [202104])
         MES_A_PREDECIR = comp.get("MES_A_PREDECIR", 202106)
         MES_01         = comp.get("MES_01", 202101)
