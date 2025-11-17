@@ -6,7 +6,8 @@ COMPETENCIA: 2
     # 3- bayesiana  | test_baye 
     # 4- experimento |  test_exp
     # 5- prediccion_final | test_prediccion_final |
-PROCESO_PPAL: "prediccion_final"
+    # 6- top_n
+PROCESO_PPAL: "top_n"
 # SUSBAMPLEO EN PORCENTAJE
 SUBSAMPLEO : 0.1 # solo para baye y exp y pred final
 
@@ -126,4 +127,5 @@ configuracion_competencia_2:
   MES_03: 202103
   MES_04: 202104
   MES_05: 202105
+  TOP_N: 11000
 

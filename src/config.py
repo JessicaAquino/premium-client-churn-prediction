@@ -138,6 +138,7 @@ try:
         MES_04         = comp.get("MES_04", 202104)
         MES_05         = comp.get("MES_05", 202105)
 
+        TOP_N = comp.get("TOP_N", 11000)
 
 
 except Exception as e:

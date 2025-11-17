@@ -11,7 +11,7 @@ from src_feateng.feat_eng_armado_tablas import lanzar_feat_eng
 from src_bayesianas.bayesiana_lgbm_2 import lanzar_bayesiana_lgbm
 from src_bayesianas.bayesiana_xgb_2 import lanzar_bayesiana_xgb
 from src_experimentos.experimento_eda import lanzar_eda
-from src_experimentos.experimento_lgbm_prueba_1 import lanzar_experimento_lgbm
+from src_experimentos.experimento_lgbm_prueba_1 import lanzar_experimento_lgbm, top_n
 from src_experimentos.experimento_1_xgb_edited import lanzar_experimento_xgb
 
 
@@ -38,6 +38,9 @@ model_exp = MODEL_EXP
 n_bayesiana = N_BAYESIANA
 n_semillas_bay=N_SEMILLAS_BAY
 model_bay = MODEL_BAY
+# Conf TOP_N
+n_envios = TOP_N
+
 # ---------------------------------------------------------------------------------------------------------------------------
 if proceso_ppal =="feat_eng":
     numero_proceso = n_fe
@@ -100,6 +103,9 @@ def main():
             lanzar_experimento_lgbm(fecha,semillas , n_experimento , proceso_ppal)
         elif model_exp =="xgb":
             lanzar_experimento_xgb(fecha,semillas , n_experimento , proceso_ppal)
+    
+    elif (proceso_ppal == "top_n"):
+        top_n(n_envios)
 
     return
 

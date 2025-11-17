@@ -317,3 +317,21 @@ def lanzar_experimento_lgbm(fecha:str ,semillas:list[int],n_experimento:int,proc
 
 logger.info(f">>> Ejecucion finalizada. Revisar logs para mas detalles.")
 
+def top_n(n):
+    input_path = "output/prediccion_final_prueba_1_zlightgbm_LGBM_5_SEMILLAS_predicciones_finales.csv"
+    output_path = f"output/prediccion_final_prueba_1_zlightgbm_LGBM_5_SEMILLAS_predicciones_finales_top_{n}.csv"
+
+    # Read input CSV
+    df = pd.read_csv(input_path)
+
+    # Filter only rows where prediction == 1
+    filtered = df[df["prediction"] == 1]
+
+    # Take the first n rows WITHOUT changing order
+    top_n_rows = filtered.head(n)[["numero_de_cliente"]]
+
+    # Save without header or index
+    top_n_rows.to_csv(output_path, index=False, header=False)
+
+    print("Archivo generado:", output_path)
+
