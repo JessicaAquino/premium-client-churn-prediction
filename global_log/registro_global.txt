@@ -158,3 +158,9 @@
 {"fecha": "2025-11-15_15-05-23", "competencia": 2, "proceso_ppal": "bayesiana", "n_experimento": "prueba_zlgbm_2", "n_semillas": 1, "in_gcp": true}
 {"fecha": "2025-11-16_23-19-04", "competencia": 2, "proceso_ppal": "top_n", "n_experimento": "prueba_1_zlightgbm", "n_semillas": [], "in_gcp": true}
 {"fecha": "2025-11-16_23-20-21", "competencia": 2, "proceso_ppal": "top_n", "n_experimento": "prueba_1_zlightgbm", "n_semillas": [], "in_gcp": true}
+{"fecha": "2025-11-16_22-44-03", "competencia": 2, "proceso_ppal": "experimento", "n_experimento": "prueba_1_zlightgbm", "n_semillas": 5, "in_gcp": true}
+{"fecha": "2025-11-16_22-51-46", "competencia": 2, "proceso_ppal": "experimento", "n_experimento": "prueba_1_zlightgbm", "n_semillas": 5, "in_gcp": true}
+{"fecha": "2025-11-16_23-00-00", "competencia": 2, "proceso_ppal": "experimento", "n_experimento": "prueba_1_zlightgbm", "n_semillas": 5, "in_gcp": true}
+{"fecha": "2025-11-16_23-14-40", "competencia": 2, "proceso_ppal": "experimento", "n_experimento": "prueba_1_zlightgbm", "n_semillas": 5, "in_gcp": true}
+{"fecha": "2025-11-16_23-17-01", "competencia": 2, "proceso_ppal": "experimento", "n_experimento": "prueba_1_zlightgbm", "n_semillas": 5, "in_gcp": true}
+{"fecha": "2025-11-17_00-13-17", "competencia": 2, "proceso_ppal": "prediccion_final", "n_experimento": "prueba_1_zlightgbm", "n_semillas": 5, "in_gcp": true}
