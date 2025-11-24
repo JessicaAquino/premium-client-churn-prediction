@@ -1,4 +1,4 @@
-from src.ml.optimization_config import OptimizationConfig
+from ml.optimization_config import OptimizationConfig
 
 import optuna
 from optuna.study import Study
@@ -13,11 +13,10 @@ logger = logging.getLogger(__name__)
 class OptunaRunner:
     def __init__(self, cfg: OptimizationConfig):
         self.cfg = cfg
-        self.db_path = cfg.output_path + "db/"
         self.params_path = cfg.output_path + "best_params/"
 
     def run_study(self, objective_fn):
-        storage = f"sqlite:///{self.db_path}optimization_lgbm.db"
+        storage = f"sqlite:///{self.cfg.training_db_path}{self.cfg.training_db_name}"
         study_name = f"study_lgbm_binary{self.cfg.name}"
 
         study = optuna.create_study(

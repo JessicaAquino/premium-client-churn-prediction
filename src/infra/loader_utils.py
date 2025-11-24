@@ -7,7 +7,11 @@ logger = logging.getLogger(__name__)
 def ensure_dirs(*paths: str):
     """Create directories if they don't exist."""
     for path in paths:
+        if not path:
+            logger.warning("Skipped creating directory: path is None or empty")
+            continue
         os.makedirs(path, exist_ok=True)
+        logger.debug(f"Ensured directory exists: {path}")
 
 def load_data(path: str, format: str = "csv") -> pl.DataFrame | None:
     """

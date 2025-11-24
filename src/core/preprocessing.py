@@ -1,7 +1,7 @@
 import polars as pl
 import pandas as pd
 import numpy as np
-import src.infra.logger_wrapper as log
+import infra.logger_wrapper as log
 
 @log.process_log
 def preprocessing_pipeline(

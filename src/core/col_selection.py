@@ -1,5 +1,5 @@
 import polars as pl
-import src.infra.logger_wrapper as log
+import infra.logger_wrapper as log
 
 @log.process_log
 def col_selection(df: pl.DataFrame) -> tuple[list[str], list[list[str]]]:

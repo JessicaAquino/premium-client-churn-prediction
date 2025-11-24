@@ -1,4 +1,4 @@
-from src.ml.optimization_config import OptimizationConfig
+from ml.optimization_config import OptimizationConfig
 import numpy as np
 import lightgbm as lgb
 

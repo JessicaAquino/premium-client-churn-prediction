@@ -2,6 +2,7 @@
 .gcp/
 output/
 
+db/
 data/
 .venv/
 .vscode/

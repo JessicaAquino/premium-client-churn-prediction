@@ -1,5 +1,5 @@
 CHALLENGE_01:
-  STUDY_NAME: "_20251012_01"
+  STUDY_NAME: "_20251009_TEST"
 
   SEEDS: [811157, 502717, 782911, 464939, 213713]
 
@@ -12,7 +12,9 @@ CHALLENGE_01:
 
   BINARY_POSITIVES: ["BAJA+1", "BAJA+2"]
 
-  LGBM_N_TRIALS: 50
+  TOP_N: 13500
+
+  LGBM_N_TRIALS: 1 #100
   LGBM_N_FOLDS: 5
   LGBM_N_BOOSTS: 1000
   LGBM_THRESHOLD: 0.025
@@ -21,17 +23,23 @@ CHALLENGE_01:
   PATHS:
     LOGS: "logs/"
 
-    INPUT_DATA: "~/buckets/b1/datasets/"
+    TRAINING_DB: "db/"
+
+    INPUT_DATA: "data/"
     
+    OUTPUT_LGBM_OPTIMIZATION_DB: "db/"
     OUTPUT_LGBM_OPTIMIZATION: "output/lgbm/opt/"
     OUTPUT_LGBM_OPTIMIZATION_BEST_PARAMS: "output/lgbm/opt/best_params/"
-    OUTPUT_LGBM_OPTIMIZATION_DB: "output/lgbm/opt/db/"
     
     OUTPUT_LGBM_MODEL: "output/lgbm/model/"
     
     OUTPUT_PREDICTION: "output/prediction/"
-
     OUTPUT_GRAPHICS: "output/graphics/"
+  
+  FILES:
+    INPUT_DATASET: "competencia_01.csv"
+
+    TRAINING_DB: "optimization_lgbm.db"
 
 
 
