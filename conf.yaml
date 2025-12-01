@@ -1,5 +1,7 @@
-CHALLENGE_01:
-  STUDY_NAME: "_20251012_01"
+CHALLENGE_03:
+  STUDY_NAME: "preprocessing_01"
+
+  PROCESS: ["copy_datasets"]
 
   SEEDS: [811157, 502717, 782911, 464939, 213713]
 
@@ -12,32 +14,33 @@ CHALLENGE_01:
 
   BINARY_POSITIVES: ["BAJA+1", "BAJA+2"]
 
-  LGBM_N_TRIALS: 50
+  TOP_N: 11000
+
+  LGBM_N_TRIALS: 1 #100
   LGBM_N_FOLDS: 5
   LGBM_N_BOOSTS: 1000
   LGBM_THRESHOLD: 0.025
   
   # Folders
   PATHS:
+    GCP_BASE: "/home/jessica_aquino_torrez/buckets/b1/"
+
     LOGS: "logs/"
 
-    INPUT_DATA: "~/buckets/b1/datasets/"
-    
-    OUTPUT_LGBM_OPTIMIZATION: "output/lgbm/opt/"
-    OUTPUT_LGBM_OPTIMIZATION_BEST_PARAMS: "output/lgbm/opt/best_params/"
-    OUTPUT_LGBM_OPTIMIZATION_DB: "output/lgbm/opt/db/"
-    
-    OUTPUT_LGBM_MODEL: "output/lgbm/model/"
-    
-    OUTPUT_PREDICTION: "output/prediction/"
+    OUTPUT: "output/"
 
-    OUTPUT_GRAPHICS: "output/graphics/"
+    DATASETS: "datasets/"
 
+    TRAINING_DB: "db/"
+  
+  FILES:
+    # datasets/
+    DATASET_01_RAW: "competencia_01.csv"
+    DATASET_02_RAW: "competencia_02_crudo.csv.gz"
+    DATASET_03_RAW: "competencia_03_crudo.csv.gz"
 
+    DATASET_01: "competencia_01.csv"
+    DATABASE: "churn_bank_db.duckdb"
 
-# Nota: Retomar luego de competencia1
-segmentation:
-  PATH_INPUT_DATA: "data/competencia_01.csv"
-  SEEDS: [811157, 502717, 782911, 464939, 213713]
-  MONTH_TRAIN: 202104
-  MONTH_TEST: 202106
+    # output/
+    TRAINING_DB: "optimization_lgbm.db"

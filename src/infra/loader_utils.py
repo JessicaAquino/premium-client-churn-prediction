@@ -9,6 +9,8 @@ def ensure_dirs(*paths: str):
     for path in paths:
         os.makedirs(path, exist_ok=True)
 
+def load_data_duckdb(path: str, format: str = "gz") -> :
+
 def load_data(path: str, format: str = "csv") -> pl.DataFrame | None:
     """
     Carga el archivo ubicado en 'path' y lo devuelve en un dataframe

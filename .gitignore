@@ -1,4 +1,5 @@
 # conf.yaml
+db/
 .gcp/
 output/
 
