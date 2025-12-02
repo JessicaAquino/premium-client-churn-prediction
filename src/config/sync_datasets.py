@@ -27,3 +27,18 @@ def copy_raw_datasets(ctx: Context):
     logger.info("All datasets copied successfully.")
 
     return True
+
+@log.process_log
+def save_database(ctx: Context):
+    """
+    Copy database from VM memory to bucket
+    """
+
+    bucket_base = Path(ctx.path_gcp_base) / ctx.path_datasets
+    local_base  = Path.cwd() / ctx.path_datasets
+
+    db_file = ctx.file_database
+
+    shutil.copy(local_base / db_file, bucket_base / db_file)
+
+    return True

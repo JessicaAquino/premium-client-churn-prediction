@@ -13,8 +13,6 @@ logger = logging.getLogger(__name__)
 
 
 def main(experiment_name: str = "CHALLENGE_03"):
-    logger.info("Main execution started")
-
     cfg = cf.load_config(experiment_name)
     ctx = Context(cfg)
 
@@ -24,12 +22,16 @@ def main(experiment_name: str = "CHALLENGE_03"):
         ctx.output
     )
     lc.setup_logging(ctx.path_logs)
+    
+    logger.info("Main execution started")
 
     for pr in ctx.process:
         if(pr == "copy_datasets"):
             sd.copy_raw_datasets(ctx)
         if(pr == "preprocessing"):
             pp.create_ternary_class_and_weight(ctx)
+        if(pr == "save_database"):
+            sd.save_database(ctx)
     
     logger.info("Main execution finished")
 
