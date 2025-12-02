@@ -66,7 +66,7 @@ pip install -r vm_requirements.txt
 Now! We execute the main.py as a background process. The output will be saved on the vm_execution.log.
 ```bash
 # With this, we send the process to background
-nohup python3 -u src/main.py > ../vm_execution.log 2>&1 &
+nohup python3 -u src/main.py > ../vm_execution_2.log 2>&1 &
 ```
 
 ### Bonus

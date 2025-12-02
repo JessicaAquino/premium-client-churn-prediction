@@ -9,6 +9,7 @@ logger = logging.getLogger(__name__)
 # ----------------------------------------------------------------------
 # Pipeline Orchestration
 # ----------------------------------------------------------------------
+@log.process_log
 def create_ternary_class_and_weight(ctx: Context):
     """
     Full pipeline:
@@ -52,34 +53,25 @@ def load_raw_data(ctx: Context):
 # ----------------------------------------------------------------------
 @log.process_log
 def generate_ternary_target(ctx: Context):
-    """
-    Apply the clase_ternaria macro to generate BAJA+1 / BAJA+2 / CONTINUA.
-    """
-    query = """
-        -- Define the clase_ternaria macro
+
+    macro_sql = """
         CREATE OR REPLACE MACRO clase_ternaria(t) AS TABLE (
             WITH base AS (
-                SELECT
-                    *,
-                    (CAST(foto_mes / 100 AS INTEGER) * 12 + (foto_mes % 100)) AS period_idx
+                SELECT *,
+                       (CAST(foto_mes / 100 AS INTEGER) * 12 + (foto_mes % 100)) AS period_idx
                 FROM t
             ),
             seq AS (
-                SELECT
-                    *,
-                    LEAD(period_idx, 1) OVER (
-                        PARTITION BY numero_de_cliente
-                        ORDER BY period_idx
-                    ) AS p1,
-                    LEAD(period_idx, 2) OVER (
-                        PARTITION BY numero_de_cliente
-                        ORDER BY period_idx
-                    ) AS p2
+                SELECT *,
+                       LEAD(period_idx, 1) OVER (
+                           PARTITION BY numero_de_cliente ORDER BY period_idx
+                       ) AS p1,
+                       LEAD(period_idx, 2) OVER (
+                           PARTITION BY numero_de_cliente ORDER BY period_idx
+                       ) AS p2
                 FROM base
             ),
-            bounds AS (
-                SELECT MAX(period_idx) AS maxp FROM seq
-            )
+            bounds AS (SELECT MAX(period_idx) AS maxp FROM seq)
             SELECT
                 * EXCLUDE (period_idx, p1, p2),
                 CASE
@@ -99,15 +91,22 @@ def generate_ternary_target(ctx: Context):
                 END AS clase_ternaria
             FROM seq
         );
+    """
 
-        -- Apply macro to df_init
+    apply_sql = """
         CREATE OR REPLACE TABLE df_init AS
         SELECT *
         FROM clase_ternaria(df_init);
     """
 
     conn = duckdb.connect(ctx.path_datasets + ctx.file_database)
-    conn.execute(query)
+
+    logger.info("Creating macro clase_ternaria...")
+    conn.execute(macro_sql)
+
+    logger.info("Applying macro clase_ternaria(df_init)...")
+    conn.execute(apply_sql)
+
     conn.close()
 
 
