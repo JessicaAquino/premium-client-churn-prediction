@@ -3,6 +3,7 @@ import logging
 import config.conf as cf
 import config.logger_config as lc
 import config.sync_datasets as sd
+import core.preprocessing_duckdb as pp
 import infra.loader_utils as lu
 
 from config.context import Context
@@ -27,6 +28,8 @@ def main(experiment_name: str = "CHALLENGE_03"):
     for pr in ctx.process:
         if(pr == "copy_datasets"):
             sd.copy_raw_datasets(ctx)
+        if(pr == "preprocessing"):
+            pp.create_ternary_class_and_weight(ctx)
     
     logger.info("Main execution finished")
 
