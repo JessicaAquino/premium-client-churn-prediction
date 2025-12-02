@@ -54,65 +54,50 @@ def load_raw_data(ctx: Context):
 @log.process_log
 def generate_ternary_target(ctx: Context):
 
-    macro_sql = """
-        CREATE OR REPLACE MACRO clase_ternaria(t) AS TABLE (
-            WITH base AS (
-                SELECT *,
-                    (CAST(foto_mes / 100 AS INTEGER) * 12 + (foto_mes % 100)) AS period_idx
-                FROM t
-            ),
-            seq AS (
-                SELECT *,
-                    LEAD(period_idx, 1) OVER (
-                        PARTITION BY numero_de_cliente ORDER BY period_idx
-                    ) AS p1,
-                    LEAD(period_idx, 2) OVER (
-                        PARTITION BY numero_de_cliente ORDER BY period_idx
-                    ) AS p2
-                FROM base
-            ),
-            bounds AS (
-                SELECT MAX(period_idx) AS maxp FROM seq
-            ),
-            result AS (
-                SELECT
-                    * EXCLUDE (period_idx, p1, p2),
-                    CASE
-                        WHEN period_idx < (SELECT maxp FROM bounds)
-                            AND (p1 IS NULL OR p1 > period_idx + 1)
-                        THEN 'BAJA+1'
-
-                        WHEN period_idx < (SELECT maxp FROM bounds) - 1
-                            AND p1 = period_idx + 1
-                            AND (p2 IS NULL OR p2 > period_idx + 2)
-                        THEN 'BAJA+2'
-
-                        WHEN period_idx <= (SELECT maxp FROM bounds) - 2
-                        THEN 'CONTINUA'
-
-                        ELSE NULL
-                    END AS clase_ternaria
-                FROM seq
-            )
-            SELECT * FROM result
-        );
-    """
-
-
-    apply_sql = """
+    query = """
         CREATE OR REPLACE TABLE df_init AS
-        SELECT *
-        FROM clase_ternaria(df_init);
+        WITH base AS (
+            SELECT *,
+                   (CAST(foto_mes / 100 AS INTEGER) * 12 + (foto_mes % 100)) AS period_idx
+            FROM df_init
+        ),
+        seq AS (
+            SELECT *,
+                   LEAD(period_idx, 1) OVER (
+                       PARTITION BY numero_de_cliente ORDER BY period_idx
+                   ) AS p1,
+                   LEAD(period_idx, 2) OVER (
+                       PARTITION BY numero_de_cliente ORDER BY period_idx
+                   ) AS p2
+            FROM base
+        ),
+        bounds AS (
+            SELECT MAX(period_idx) AS maxp FROM seq
+        )
+        SELECT
+            * EXCLUDE (period_idx, p1, p2),
+            CASE
+                WHEN period_idx < (SELECT maxp FROM bounds)
+                     AND (p1 IS NULL OR p1 > period_idx + 1)
+                THEN 'BAJA+1'
+
+                WHEN period_idx < (SELECT maxp FROM bounds) - 1
+                     AND p1 = period_idx + 1
+                     AND (p2 IS NULL OR p2 > period_idx + 2)
+                THEN 'BAJA+2'
+
+                WHEN period_idx <= (SELECT maxp FROM bounds) - 2
+                THEN 'CONTINUA'
+
+                ELSE NULL
+            END AS clase_ternaria
+        FROM seq;
     """
 
     conn = duckdb.connect(ctx.path_datasets + ctx.file_database)
 
-    logger.info("Creating macro clase_ternaria...")
-    conn.execute(macro_sql)
-
-    logger.info("Applying macro clase_ternaria(df_init)...")
-    conn.execute(apply_sql)
-
+    logger.info("Generating ternary target with window logic...")
+    conn.execute(query)
     conn.close()
 
 
