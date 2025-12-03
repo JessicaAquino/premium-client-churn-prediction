@@ -15,7 +15,6 @@ def feature_engineering_pipeline(ctx: Context):
 
     logger.info(all_cols)
 
-
     new_columns = {
         "month": True,
         "ctrx_norm": True,
@@ -136,6 +135,60 @@ def add_sum_prod_serv(all_cols: list[str]) -> str:
         sql_parts += f", ({sum_expr}) AS {feature_name}"
 
     return sql_parts
+
+def add_sum_ganancias_gastos(all_cols: list[str]):
+    ganancias_gastos = {
+    "ganancias" : [
+        # Ingresos por sueldo
+        "mpayroll","mpayroll2",
+        # Ahorro e inversiones (indican colchón financiero)
+        "mplazo_fijo_pesos","mplazo_fijo_dolares","minversion1_pesos","minversion1_dolares","minversion2",
+        # Plata que entra por transferencias
+        "mtransferencias_recibidas",
+        # Beneficios/descuentos (mejoran la situación neta)
+        "mcajeros_propios_descuentos","mtarjeta_visa_descuentos","mtarjeta_master_descuentos"],
+    
+    "gastos": [# Comisiones y costos directos
+        "mcomisiones","mcomisiones_mantenimiento","mcomisiones_otras",
+        # Débitos y pagos de servicios (egresos automáticos)
+        "mcuenta_debitos_automaticos","mpagodeservicios","mpagomiscuentas",
+        # Deuda / préstamos (presión financiera)"mprestamos_personales",
+        "mprestamos_prendarios","mprestamos_hipotecarios","mpasivos_margen",
+        # Egresos por movimientos
+        "mtransferencias_emitidas","mextraccion_autoservicio",
+        "mcheques_emitidos","mcheques_depositados_rechazados","mcheques_emitidos_rechazados",
+        # Uso de cajeros/ATM (generalmente salida de plata)
+        "matm","matm_other"]
+    }
+    
+    ganancias_clean = [c for c in ganancias_gastos["ganancias"] if c in all_cols]
+    gastos_clean = [c for c in ganancias_gastos["gastos"] if c in all_cols]
+
+    sql = ""
+
+    # Build sum of gains
+    if ganancias_clean:
+        sum_gan = " + ".join([f"TRY_CAST({c} AS DOUBLE)" for c in ganancias_clean])
+        sql += f", ({sum_gan}) AS monto_ganancias"
+    else:
+        sql += ", 0 AS monto_ganancias"
+
+    # Build sum of expenses
+    if gastos_clean:
+        sum_gas = " + ".join([f"TRY_CAST({c} AS DOUBLE)" for c in gastos_clean])
+        sql += f", ({sum_gas}) AS monto_gastos"
+    else:
+        sql += ", 0 AS monto_gastos"
+
+    # Add ratio (safe divide)
+    sql += """
+    , CASE 
+        WHEN monto_gastos IS NULL THEN NULL 
+        ELSE monto_ganancias / (monto_gastos + 1) 
+    END AS ganancia_gasto_dif
+    """
+
+    return sql
 
 def create_lag_delta_linreg_minmax_ratio(feature_dict: dict, cols_with_types: list[tuple[str, str]]):
 
