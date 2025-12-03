@@ -59,7 +59,7 @@ def create_new_columns(ctx: Context, all_cols: list[str], config: dict):
         sql += add_sum_prod_serv(all_cols)
 
     if "sum_ratio_ganancias_gastos" in config:
-        sql += add_sum_ratio_ganancias_gastos()
+        sql += add_sum_ratio_ganancias_gastos(all_cols)
 
     sql += " FROM base"
 
@@ -140,7 +140,7 @@ def add_sum_prod_serv(all_cols: list[str]) -> str:
 
     return sql_parts
 
-def add_sum_ratio_ganancias_gastos():
+def add_sum_ratio_ganancias_gastos(all_cols: list[str]):
     ganancias_gastos = {
     "ganancias" : [
         # Ingresos por sueldo
