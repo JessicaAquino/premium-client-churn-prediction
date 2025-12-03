@@ -32,7 +32,7 @@ def feature_engineering_pipeline(ctx: Context):
         "linreg": 3
     }
 
-    create_lag_delta_linreg_minmax_ratio(historic_fe, all_cols)
+    create_lag_delta_linreg_minmax_ratio(historic_fe, cols_with_types)
 
     return True
 
@@ -137,9 +137,9 @@ def add_sum_prod_serv(all_cols: list[str]) -> str:
 
     return sql_parts
 
-def create_lag_delta_linreg_minmax_ratio(feature_dict: dict, all_cols: list[str]):
+def create_lag_delta_linreg_minmax_ratio(feature_dict: dict, cols_with_types: list[tuple[str, str]]):
 
-    cols_lag_delta, cols_ratios = cs.col_selection(all_cols)
+    cols_lag_delta, cols_ratios = cs.col_selection(cols_with_types)
      
     historic_fe = {
         "lag": {"columns": cols_lag_delta, "n": feature_dict["lag"]},
