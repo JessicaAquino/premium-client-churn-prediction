@@ -2,10 +2,10 @@ CHALLENGE_03:
   STUDY_NAME: "preprocessing_01"
 
   PROCESS: [
-    # "copy_raws",        #Raws from bucket to VM
-    # "preprocessing",    #Target generation and binarization
-    # "save_database",    #Databaase from VM to bucket
-    # "delete_raws",      #Delete raw datasets
+    "copy_raws",        #Raws from bucket to VM
+    "preprocessing",    #Target generation and binarization
+    "save_database",    #Databaase from VM to bucket
+    "delete_raws",      #Delete raw datasets
     "feature_engineering"
   ]
 

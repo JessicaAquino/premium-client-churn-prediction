@@ -24,15 +24,42 @@ def feature_engineering_pipeline(ctx: Context):
     
     create_new_columns(ctx, all_cols, new_columns)
 
-    historic_fe = {
-        "lag": 2,
-        "delta": 2,
-        "minmax": True,
-        "ratio": True,
-        "linreg": 3
-    }
+    # historic_fe = {
+    #     "lag": 2,
+    #     "delta": 2,
+    #     "minmax": True,
+    #     "ratio": True,
+    #     "linreg": 3
+    # }
 
-    create_lag_delta_linreg_minmax_ratio(ctx, historic_fe, cols_with_types)
+    # create_lag_delta_linreg_minmax_ratio(ctx, historic_fe, cols_with_types)
+
+    ORDEN_LAGS = 3
+    VENTANA = 6
+
+    # PERCENTIL
+    df_init_chiquito=cs.create_df_chiquito(ctx) # Para agregar las columnas de las corregidas
+    cols_percentil,_,_=cs.col_selection(df_init_chiquito)
+    feature_engineering_percentil(ctx, df_init_chiquito ,cols_percentil,bins=20)
+
+    # RATIOS
+    df_init_chiquito=cs.create_df_chiquito(ctx)
+    _,_,cols_ratios = cs.col_selection(df_init_chiquito)
+    feature_engineering_ratio(ctx, df_init_chiquito,cols_ratios)
+ 
+
+    df_init_chiquito=cs.create_df_chiquito(ctx)
+    _,  cols_lag_delta_max_min_regl  ,   _ = cs.col_selection(df_init_chiquito)
+    feature_engineering_lag(ctx, df_init_chiquito,cols_lag_delta_max_min_regl,ORDEN_LAGS)
+    feature_engineering_delta(ctx, df_init_chiquito,cols_lag_delta_max_min_regl,ORDEN_LAGS)
+    feature_engineering_linreg(ctx, df_init_chiquito , cols_lag_delta_max_min_regl,VENTANA)
+    feature_engineering_max_min(ctx, df_init_chiquito,cols_lag_delta_max_min_regl ,VENTANA)
+
+    feature_engineering_lag_orden_fijo(ctx, df_init_chiquito,cols_lag_delta_max_min_regl,6)
+    feature_engineering_lag_orden_fijo(ctx, df_init_chiquito,cols_lag_delta_max_min_regl,12)
+    feature_engineering_delta_orden_fijo(ctx, df_init_chiquito,cols_lag_delta_max_min_regl,6)
+    feature_engineering_delta_orden_fijo(ctx, df_init_chiquito,cols_lag_delta_max_min_regl,12)
+    feature_engineering_mean(ctx, df_init_chiquito,cols_lag_delta_max_min_regl , VENTANA)
 
     return True
 
@@ -194,90 +221,336 @@ def add_sum_ratio_ganancias_gastos(all_cols: list[str]):
 
     return sql
 
-def create_lag_delta_linreg_minmax_ratio(ctx: Context, feature_dict: dict, cols_with_types: list[tuple[str, str]]):
+# def create_lag_delta_linreg_minmax_ratio(ctx: Context, feature_dict: dict, cols_with_types: list[tuple[str, str]]):
 
-    cols_lag_delta, cols_ratios = cs.col_selection(cols_with_types)
+#     cols_lag_delta, cols_ratios = cs.col_selection(cols_with_types)
      
-    historic_fe = {
-        "lag": {"columns": cols_lag_delta, "n": feature_dict["lag"]},
-        "delta": {"columns": cols_lag_delta, "n": feature_dict["delta"]},
-        "minmax": {"columns": cols_lag_delta},
-        "ratio": {"pairs": cols_ratios},
-        "linreg": {"columns": cols_lag_delta[:10], "window": feature_dict["linreg"]}
-    }
+#     historic_fe = {
+#         "lag": {"columns": cols_lag_delta, "n": feature_dict["lag"]},
+#         "delta": {"columns": cols_lag_delta, "n": feature_dict["delta"]},
+#         "minmax": {"columns": cols_lag_delta},
+#         "ratio": {"pairs": cols_ratios},
+#         "linreg": {"columns": cols_lag_delta[:10], "window": feature_dict["linreg"]}
+#     }
 
-    sql = """
-        CREATE OR REPLACE TABLE df_init AS 
-        WITH base AS (
-            SELECT * FROM df_init
-        )
-        SELECT *
-    """
+#     sql = """
+#         CREATE OR REPLACE TABLE df_init AS 
+#         WITH base AS (
+#             SELECT * FROM df_init
+#         )
+#         SELECT *
+#     """
 
-    window_clause = ""
+#     window_clause = ""
 
-    if "lag" in historic_fe:
-        sql += add_lag_sql(historic_fe["lag"])
+#     if "lag" in historic_fe:
+#         sql += add_lag_sql(historic_fe["lag"])
 
-    if "delta" in historic_fe:
-        sql += add_delta_sql(historic_fe["delta"])
+#     if "delta" in historic_fe:
+#         sql += add_delta_sql(historic_fe["delta"])
 
-    if "minmax" in historic_fe:
-        sql += add_minmax_sql(historic_fe["minmax"])
+#     if "minmax" in historic_fe:
+#         sql += add_minmax_sql(historic_fe["minmax"])
     
-    if "ratio" in historic_fe:
-        sql += add_ratio_sql(historic_fe["ratio"])
+#     if "ratio" in historic_fe:
+#         sql += add_ratio_sql(historic_fe["ratio"])
 
-    if "linreg" in historic_fe:
-        linreg_str, window_clause = add_linreg_sql(historic_fe["linreg"])
-        sql += linreg_str
+#     if "linreg" in historic_fe:
+#         linreg_str, window_clause = add_linreg_sql(historic_fe["linreg"])
+#         sql += linreg_str
 
-    sql += " FROM base"
-    if window_clause != "":
-        sql += " " + window_clause
+#     sql += " FROM base"
+#     if window_clause != "":
+#         sql += " " + window_clause
 
-    logger.info(f"Query fe:\n{sql}")
+#     logger.info(f"Query fe:\n{sql}")
+
+#     conn = duckdb.connect(ctx.database)
+#     conn.execute(sql)
+#     conn.close()
+
+# def add_lag_sql(config_lag: dict) -> str:    
+#     lag_str = ""
+#     for col in config_lag["columns"]:
+#         for i in range(1, config_lag["n"] + 1):
+#             lag_str += f", lag({col}, {i}) OVER (PARTITION BY numero_de_cliente ORDER BY foto_mes) AS {col}_lag_{i}"
+
+#     return lag_str
+
+# def add_delta_sql(config_delta: dict) -> str:
+#     delta_str = ""
+#     for col in config_delta["columns"]:
+#         for i in range(1, config_delta["n"] + 1):
+#             delta_str += f", {col} - {col}_lag_{i} AS {col}_delta_{i}"
+
+#     return delta_str
+
+# def add_minmax_sql(config_minmax: dict) -> str:
+#     min_max_sql = ""
+#     for col in config_minmax["columns"]:
+#         min_max_sql += f", MAX({col}) OVER (PARTITION BY numero_de_cliente) AS {col}_MAX, MIN({col}) OVER (PARTITION BY numero_de_cliente) AS {col}_MIN"
+
+#     return min_max_sql
+
+# def add_ratio_sql(config_ratio: dict) -> str:
+#     ratio_sql = ""
+#     for pair in config_ratio["pairs"]:
+#         ratio_sql += f", IF({pair[1]} = 0, 0, {pair[0]} / {pair[1]}) AS ratio_{pair[0]}_{pair[1]}"
+
+#     return ratio_sql
+
+# def add_linreg_sql(config_linreg: dict) -> tuple:
+#     linreg_sql = ""
+#     window_size = config_linreg.get("window", 3)
+#     for col in config_linreg["columns"]:
+#         linreg_sql += f", REGR_SLOPE({col}, cliente_antiguedad) OVER ventana_{window_size} AS slope_{col}"
+    
+#     window_clause = f" WINDOW ventana_{window_size} AS (PARTITION BY numero_de_cliente ORDER BY foto_mes ROWS BETWEEN {window_size} PRECEDING AND CURRENT ROW)"
+
+#     return linreg_sql, window_clause
+
+@log.process_log
+def feature_engineering_percentil(ctx: Context, all_cols: list[str] , columnas:list[str],bins:int=20):
+    if any( c.endswith("_percentil") for c in all_cols):
+        logger.info("Ya se realizo percentil")
+        return
+    logger.info("Todavia no se realizo percentil")
+    sql ="""CREATE or REPLACE table df_init as """
+    sql += f""" select *""" 
+    for c in columnas:
+        if c in all_cols:
+            sql += f""", ntile({bins}) OVER (partition by foto_mes order by {c} ) as {c}_percentil"""
+        else:
+            logger.warning(f"No se encontro la columna {c} en el df")
+    
+    sql += " FROM df_init"
+
+    logging.info(f"QUERY: \n{sql}")
+    
+    conn=duckdb.connect(ctx.database)
+    conn.execute(sql)
+    conn.close()
+
+@log.process_log
+def feature_engineering_ratio(ctx: Context, all_cols: list[str], columnas:list[list[str]] ):
+    if any(c.endswith(f"_ratio") for c in all_cols):
+        logger.info("Ya se hizo ratios")
+        return
+    logger.info("Todavia no se hizo ratios")
+    sql="CREATE or REPLACE table df_init as "
+    sql+="(SELECT *"
+    for par in columnas:
+        if par[0] in all_cols and par[1] in all_cols:
+            sql+=f", if({par[1]}=0 ,0,{par[0]}/{par[1]}) as {par[0]}_{par[1]}_ratio"
+        else:
+            print(f"no se encontro el par de atributos {par}")
+
+    sql+=" FROM df_init)"
+
+    logging.info(f"QUERY: \n{sql}")
 
     conn = duckdb.connect(ctx.database)
     conn.execute(sql)
     conn.close()
 
-def add_lag_sql(config_lag: dict) -> str:    
-    lag_str = ""
-    for col in config_lag["columns"]:
-        for i in range(1, config_lag["n"] + 1):
-            lag_str += f", lag({col}, {i}) OVER (PARTITION BY numero_de_cliente ORDER BY foto_mes) AS {col}_lag_{i}"
-
-    return lag_str
-
-def add_delta_sql(config_delta: dict) -> str:
-    delta_str = ""
-    for col in config_delta["columns"]:
-        for i in range(1, config_delta["n"] + 1):
-            delta_str += f", {col} - {col}_lag_{i} AS {col}_delta_{i}"
-
-    return delta_str
-
-def add_minmax_sql(config_minmax: dict) -> str:
-    min_max_sql = ""
-    for col in config_minmax["columns"]:
-        min_max_sql += f", MAX({col}) OVER (PARTITION BY numero_de_cliente) AS {col}_MAX, MIN({col}) OVER (PARTITION BY numero_de_cliente) AS {col}_MIN"
-
-    return min_max_sql
-
-def add_ratio_sql(config_ratio: dict) -> str:
-    ratio_sql = ""
-    for pair in config_ratio["pairs"]:
-        ratio_sql += f", IF({pair[1]} = 0, 0, {pair[0]} / {pair[1]}) AS ratio_{pair[0]}_{pair[1]}"
-
-    return ratio_sql
-
-def add_linreg_sql(config_linreg: dict) -> tuple:
-    linreg_sql = ""
-    window_size = config_linreg.get("window", 3)
-    for col in config_linreg["columns"]:
-        linreg_sql += f", REGR_SLOPE({col}, cliente_antiguedad) OVER ventana_{window_size} AS slope_{col}"
+@log.process_log
+def feature_engineering_lag(ctx: Context, all_cols: list[str] ,columnas:list[str],orden_lag:int=1 ):
     
-    window_clause = f" WINDOW ventana_{window_size} AS (PARTITION BY numero_de_cliente ORDER BY foto_mes ROWS BETWEEN {window_size} PRECEDING AND CURRENT ROW)"
+    orden_lag_ya_realizado=1
+    marca_nueva_real=0
+    while marca_nueva_real ==0 and orden_lag_ya_realizado <= orden_lag:
+        if any(c.endswith(f"_lag_{orden_lag_ya_realizado}") for c in all_cols):
+            logger.info(f"Ya se hizo lag_{orden_lag_ya_realizado}")
+            orden_lag_ya_realizado+=1
+        else:
+            marca_nueva_real=1
+    if orden_lag_ya_realizado > orden_lag:
+        logger.info(f"Ya se hicieron todos los lags pedidos hasta orden {orden_lag_ya_realizado-1}")
+        return
+    
+    logger.info(f"Ya se hicieron los lags hasta orden {orden_lag_ya_realizado-1}. Falta hasta orden {orden_lag}")
+    sql = "CREATE or REPLACE table df_init as "
+    sql +="(SELECT *"
+    for attr in columnas:
+        if attr in all_cols:
+            for i in range(orden_lag_ya_realizado,orden_lag+1):
+                sql+= f",lag(try_cast({attr} as double),{i}) OVER (PARTITION BY numero_de_cliente ORDER BY foto_mes) AS {attr}_lag_{i}"
+        else:
+            logger.warning(f"No se encontro el atributo {attr} en df")
+    sql+=" FROM df_init)"
 
-    return linreg_sql, window_clause
+    logging.info(f"QUERY: \n{sql}")
+
+    # Ejecucion de la consulta SQL
+    conn = duckdb.connect(ctx.database)
+    conn.execute(sql)
+    conn.close()
+
+@log.process_log
+def feature_engineering_delta(ctx: Context, all_cols: list[str] , columnas:list[str],orden_delta:int=1 ) :
+    
+    orden_delta_ya_realizado=1
+    marca_nueva_real=0
+    while marca_nueva_real ==0 and orden_delta_ya_realizado <= orden_delta:
+        if any(c.endswith(f"_delta_{orden_delta_ya_realizado}")  for c in all_cols):
+            logger.info(f"Ya se hizo delta_{orden_delta_ya_realizado}_")
+            orden_delta_ya_realizado+=1
+        else:
+            marca_nueva_real=1
+    if orden_delta_ya_realizado > orden_delta:
+        logger.info(f"Ya se hicieron todos los deltas pedidos hasta orden {orden_delta_ya_realizado-1}")
+        return
+    logger.info(f"Ya se hicieron los deltas hasta orden {orden_delta_ya_realizado-1}. Falta hasta orden {orden_delta}")
+
+    
+    sql = "CREATE or REPLACE table df_init as "
+    sql+="(SELECT *"
+    for attr in columnas:
+        if attr in all_cols:
+            for i in range(orden_delta_ya_realizado,orden_delta+1):
+                sql += (
+                f", TRY_CAST({attr} AS DOUBLE) "
+                f"- TRY_CAST({attr}_lag_{i} AS DOUBLE) AS {attr}_delta_{i}")
+                # sql+= f", {attr}-{attr}_lag_{i} as delta_{i}_{attr}"
+        else:
+            logger.warning(f"No se encontro el atributo {attr} en df")
+    sql+=" FROM df_init)"
+
+    logging.info(f"QUERY: \n{sql}")
+
+    conn = duckdb.connect(ctx.database)
+    conn.execute(sql)
+    conn.close()
+ 
+@log.process_log
+def feature_engineering_linreg(ctx: Context, all_cols: list[str], columnas:list[str],ventana:int=3) :
+    if any(c.endswith("_slope") for c in all_cols):
+        logger.info("Ya se hizo slope")
+        return
+    logger.info("Todavia no se hizo slope")
+    sql = "Create or replace table df_init as "
+    sql+="SELECT *"
+    try:
+        for attr in columnas:
+            if attr in all_cols:
+                sql+=f", regr_slope(try_cast({attr} as double) , try_cast(cliente_antiguedad as double) ) over ventana_{ventana} as {attr}_slope"
+            else :
+                print(f"no se encontro el atributo {attr}")
+        sql+=f" FROM df_init window ventana_{ventana} as (partition by numero_de_cliente order by foto_mes rows between {ventana} preceding and current row)"
+    except Exception as e:
+        logger.error(f"Error en la regresion lineal : {e}")
+        raise
+
+    logging.info(f"QUERY: \n{sql}")
+
+    conn = duckdb.connect(ctx.database)
+    conn.execute(sql)
+    conn.close()
+
+@log.process_log
+def feature_engineering_max_min(ctx: Context, all_cols: list[str] , columnas:list[str],ventana:int=3) :
+    logger.info(f"df shape: {len(all_cols)}")
+    palabras_max_min=["_max","_min"]
+    if any(any(c.endswith(p) for p in palabras_max_min) for c in all_cols):
+        logger.info("Ya se hizo max min")
+        return
+    
+    sql="CREATE or REPLACE table df_init as "
+    sql+="(SELECT *"
+    try:
+
+        for attr in columnas:
+            if attr in all_cols:
+                sql+=f", max(try_cast({attr} as double)  ) over ventana_{ventana} as {attr}_max ,min(try_cast({attr} as double)) over ventana_{ventana} as {attr}_min"
+            else :
+                print(f"no se encontro el atributo {attr}")
+        sql+=f" FROM df_init window ventana_{ventana} as (partition by numero_de_cliente order by foto_mes rows between {ventana} preceding and current row))"
+    except Exception as e:
+        logger.error(f"Error en la max min : {e}")
+        raise
+
+    logging.info(f"QUERY: \n{sql}")
+
+    conn=duckdb.connect(ctx.database)
+    conn.execute(sql)
+    conn.close()
+
+@log.process_log
+def feature_engineering_lag_orden_fijo(ctx: Context, all_cols: list[str] ,columnas:list[str],orden_lag:int=1 ):
+
+    if any(c.endswith(f"_lag_{orden_lag}") for c in all_cols):
+        logger.info(f"Ya se hizo lag de orden : {orden_lag}")
+        return
+    logger.info(f"Todavia no se hizo lag de orden : {orden_lag}")
+    
+    sql = "CREATE or REPLACE table df_init as "
+    sql +="(SELECT *"
+    for attr in columnas:
+        if attr in all_cols:
+            for i in range(orden_lag,orden_lag+1):
+                sql+= f",lag(try_cast({attr} as double),{i}) OVER (PARTITION BY numero_de_cliente ORDER BY foto_mes) AS {attr}_lag_{i}"
+        else:
+            logger.warning(f"No se encontro el atributo {attr} en df")
+    sql+=" FROM df_init)"
+
+    logging.info(f"QUERY: \n{sql}")
+
+    # Ejecucion de la consulta SQL
+    conn = duckdb.connect(ctx.database)
+    conn.execute(sql)
+    conn.close()
+
+@log.process_log
+def feature_engineering_delta_orden_fijo(ctx: Context, all_cols: list[str] , columnas:list[str],orden_delta:int=1 ) :
+    
+    if any(c.endswith(f"_delta_{orden_delta}") for c in all_cols):
+        logger.info(f"Ya se hizo lag de orden : {orden_delta}")
+        return
+    logger.info(f"Todavia no se hizo lag de orden : {orden_delta}")
+    
+    sql = "CREATE or REPLACE table df_init as "
+    sql+="(SELECT *"
+    for attr in columnas:
+        if attr in all_cols:
+            for i in range(orden_delta,orden_delta+1):
+                sql += (
+                f", TRY_CAST({attr} AS DOUBLE) "
+                f"- TRY_CAST({attr}_lag_{i} AS DOUBLE) AS {attr}_delta_{i}")
+                # sql+= f", {attr}-{attr}_lag_{i} as delta_{i}_{attr}"
+        else:
+            logger.warning(f"No se encontro el atributo {attr} en df")
+    sql+=" FROM df_init)"
+
+    logging.info(f"QUERY: \n{sql}")
+
+    conn = duckdb.connect(ctx.database)
+    conn.execute(sql)
+    conn.close()
+    
+
+@log.process_log
+def feature_engineering_mean(ctx: Context, all_cols: list[str], columnas:list[str],ventana:int=3) :
+    logger.info(f"Comienzo feature media")
+
+    if any(c.endswith("_mean") for c in all_cols):
+        logger.info("Ya se hizo mean")
+        return
+    logger.info("Todavia no se hizo mean")
+    sql = "Create or replace table df_init as "
+    sql+="SELECT *"
+    try:
+        for attr in columnas:
+            if attr in all_cols:
+                sql+=f", avg(try_cast({attr} as double) ) over ventana_{ventana} as {attr}_mean"
+            else :
+                print(f"no se encontro el atributo {attr}")
+        sql+=f" FROM df_init window ventana_{ventana} as (partition by numero_de_cliente order by foto_mes rows between {ventana} preceding and current row)"
+    except Exception as e:
+        logger.error(f"Error en la media : {e}")
+        raise
+
+    logging.info(f"QUERY: \n{sql}")
+
+    conn = duckdb.connect(ctx.database)
+    conn.execute(sql)
+    conn.close()
