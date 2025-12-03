@@ -47,7 +47,7 @@ def feature_engineering_pipeline(ctx: Context):
     cols_with_types = cs.create_df_chiquito(ctx)
     all_cols = [c for c, _t in cols_with_types]
 
-    print(all_cols)
+    logger.info(all_cols)
 
     cols_lag_delta, cols_ratios = cs.col_selection(cols_with_types)
 
