@@ -5,7 +5,7 @@ CHALLENGE_03:
     # "copy_raws",        #Raws from bucket to VM
     # "preprocessing",    #Target generation and binarization
     # "save_database",    #Databaase from VM to bucket
-    "delete_raws",    #Delete raw datasets
+    # "delete_raws",      #Delete raw datasets
     "feature_engineering"
   ]
 
