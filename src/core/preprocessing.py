@@ -43,7 +43,7 @@ def load_raw_data(ctx: Context):
 
     logger.info(f"Executing query:\n{query}")
 
-    conn = duckdb.connect(ctx.path_datasets + ctx.file_database)
+    conn = duckdb.connect(ctx.database)
     conn.execute(query)
     conn.close()
 
@@ -94,7 +94,7 @@ def generate_ternary_target(ctx: Context):
         FROM seq;
     """
 
-    conn = duckdb.connect(ctx.path_datasets + ctx.file_database)
+    conn = duckdb.connect(ctx.database)
 
     logger.info("Generating ternary target with window logic...")
     conn.execute(query)
@@ -120,7 +120,7 @@ def count_ternary_classes(ctx: Context):
         ORDER BY foto_mes;
     """
 
-    conn = duckdb.connect(ctx.path_datasets + ctx.file_database)
+    conn = duckdb.connect(ctx.database)
     df_count = conn.execute(query).df()
     conn.close()
 
@@ -138,7 +138,7 @@ def convert_to_binary_and_weights(ctx: Context):
     - clase_binary2       (BAJA+2 indicator)
     - clase_weight        (weights)
     """
-    conn = duckdb.connect(ctx.path_datasets + ctx.file_database)
+    conn = duckdb.connect(ctx.database)
 
     # Create binary target + weights
     sql_create = """

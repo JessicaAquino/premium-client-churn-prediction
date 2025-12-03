@@ -45,8 +45,9 @@ class Context:
         #    output/
         self.path_training_db    = files.get('TRAINING_DB')
         
+        self.database = self.path_datasets + self.file_database
 
-        self._validate_paths(["process", "path_gcp_base", "path_logs", "path_datasets"])
+        self._validate_paths(["process", "path_gcp_base", "path_logs", "path_datasets", "database"])
 
     def _validate_paths(self, required_keys: list[str]):
         for key in required_keys:
