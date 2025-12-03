@@ -139,22 +139,22 @@ def verificacion_o_creacion_tabla():
 #         train_data=undersampling(train_data , subsampleo,semilla)
 #     logger.info(f"Terminada la carga de df con columnas: {train_data.columns}")
 #     # TRAIN
-#     X_train = train_data.drop(['clase_ternaria', 'clase_peso', 'clase_binaria','clase_binaria_2'], axis=1)
-#     y_train_binaria = train_data['clase_binaria'].to_numpy()
-#     y_train_binaria_2 = train_data['clase_binaria_2'].to_numpy()
+#     X_train = train_data.drop(['clase_ternaria', 'clase_weight', 'clase_binary','clase_binary2'], axis=1)
+#     y_train_binaria = train_data['clase_binary'].to_numpy()
+#     y_train_binaria_2 = train_data['clase_binary2'].to_numpy()
 #     y_train_class=train_data["clase_ternaria"].to_numpy()
-#     w_train = train_data['clase_peso'].to_numpy()
+#     w_train = train_data['clase_weight'].to_numpy()
 
 #     # TEST
-#     X_test = test_data.drop(['clase_ternaria', 'clase_peso','clase_binaria','clase_binaria_2'], axis=1)
-#     y_test_binaria = test_data['clase_binaria'].to_numpy()
-#     y_test_binaria_2 = test_data['clase_binaria_2'].to_numpy()
+#     X_test = test_data.drop(['clase_ternaria', 'clase_weight','clase_binary','clase_binary2'], axis=1)
+#     y_test_binaria = test_data['clase_binary'].to_numpy()
+#     y_test_binaria_2 = test_data['clase_binary2'].to_numpy()
 #     y_test_class = test_data['clase_ternaria'].to_numpy()
-#     w_test = test_data['clase_peso'].to_numpy()
+#     w_test = test_data['clase_weight'].to_numpy()
 
 
 #     # A PREDECIR
-#     X_apred = apred_data.drop(['clase_ternaria', 'clase_peso','clase_binaria','clase_binaria_2'], axis=1)
+#     X_apred = apred_data.drop(['clase_ternaria', 'clase_weight','clase_binary','clase_binary2'], axis=1)
 #     y_apred=X_apred[["numero_de_cliente"]] # DF
   
 
@@ -279,22 +279,22 @@ def split_train_test_apred(n_exp:int|str,mes_train:list[int],mes_test:int|list[i
    
     logger.info(f"Terminada la carga de df con columnas: {train_data.columns}")
     # TRAIN
-    X_train = train_data.drop(['clase_ternaria', 'clase_peso', 'clase_binaria','clase_binaria_2'], axis=1)
-    y_train_binaria = train_data['clase_binaria'].to_numpy()
-    y_train_binaria_2 = train_data['clase_binaria_2'].to_numpy()
+    X_train = train_data.drop(['clase_ternaria', 'clase_weight', 'clase_binary','clase_binary2'], axis=1)
+    y_train_binaria = train_data['clase_binary'].to_numpy()
+    y_train_binaria_2 = train_data['clase_binary2'].to_numpy()
     y_train_class=train_data["clase_ternaria"].to_numpy()
-    w_train = train_data['clase_peso'].to_numpy()
+    w_train = train_data['clase_weight'].to_numpy()
 
     # TEST
-    X_test = test_data.drop(['clase_ternaria', 'clase_peso','clase_binaria','clase_binaria_2'], axis=1)
-    y_test_binaria = test_data['clase_binaria'].to_numpy()
-    y_test_binaria_2 = test_data['clase_binaria_2'].to_numpy()
+    X_test = test_data.drop(['clase_ternaria', 'clase_weight','clase_binary','clase_binary2'], axis=1)
+    y_test_binaria = test_data['clase_binary'].to_numpy()
+    y_test_binaria_2 = test_data['clase_binary2'].to_numpy()
     y_test_class = test_data['clase_ternaria'].to_numpy()
-    w_test = test_data['clase_peso'].to_numpy()
+    w_test = test_data['clase_weight'].to_numpy()
 
 
     # A PREDECIR
-    X_apred = apred_data.drop(['clase_ternaria', 'clase_peso','clase_binaria','clase_binaria_2'], axis=1)
+    X_apred = apred_data.drop(['clase_ternaria', 'clase_weight','clase_binary','clase_binary2'], axis=1)
     y_apred=X_apred[["numero_de_cliente"]] # DF
   
 
@@ -414,22 +414,22 @@ def split_train_test_apred(n_exp:int|str,mes_train:list[int],mes_test:int|list[i
    
 #     logger.info(f"Terminada la carga de df con columnas: {train_data.columns}")
 #     # TRAIN
-#     X_train = train_data.drop(['clase_ternaria', 'clase_peso', 'clase_binaria','clase_binaria_2'], axis=1)
-#     y_train_binaria = train_data['clase_binaria'].to_numpy()
-#     y_train_binaria_2 = train_data['clase_binaria_2'].to_numpy()
+#     X_train = train_data.drop(['clase_ternaria', 'clase_weight', 'clase_binary','clase_binary2'], axis=1)
+#     y_train_binaria = train_data['clase_binary'].to_numpy()
+#     y_train_binaria_2 = train_data['clase_binary2'].to_numpy()
 #     y_train_class=train_data["clase_ternaria"].to_numpy()
-#     w_train = train_data['clase_peso'].to_numpy()
+#     w_train = train_data['clase_weight'].to_numpy()
 
 #     # TEST
-#     X_test = test_data.drop(['clase_ternaria', 'clase_peso','clase_binaria','clase_binaria_2'], axis=1)
-#     y_test_binaria = test_data['clase_binaria'].to_numpy()
-#     y_test_binaria_2 = test_data['clase_binaria_2'].to_numpy()
+#     X_test = test_data.drop(['clase_ternaria', 'clase_weight','clase_binary','clase_binary2'], axis=1)
+#     y_test_binaria = test_data['clase_binary'].to_numpy()
+#     y_test_binaria_2 = test_data['clase_binary2'].to_numpy()
 #     y_test_class = test_data['clase_ternaria'].to_numpy()
-#     w_test = test_data['clase_peso'].to_numpy()
+#     w_test = test_data['clase_weight'].to_numpy()
 
 
 #     # A PREDECIR
-#     X_apred = apred_data.drop(['clase_ternaria', 'clase_peso','clase_binaria','clase_binaria_2'], axis=1)
+#     X_apred = apred_data.drop(['clase_ternaria', 'clase_weight','clase_binary','clase_binary2'], axis=1)
 #     y_apred=X_apred[["numero_de_cliente"]] # DF
   
 
@@ -545,22 +545,22 @@ def split_train_test_apred(n_exp:int|str,mes_train:list[int],mes_test:int|list[i
 #     apred_data = data_completa[data_completa['spliteo'] == 'apred'].drop(columns=['spliteo'])
     
 #     # TRAIN
-#     X_train = train_data.drop(['clase_ternaria', 'clase_peso', 'clase_binaria','clase_binaria_2'], axis=1)
-#     y_train_binaria = train_data['clase_binaria'].to_numpy()
-#     y_train_binaria_2 = train_data['clase_binaria_2'].to_numpy()
+#     X_train = train_data.drop(['clase_ternaria', 'clase_weight', 'clase_binary','clase_binary2'], axis=1)
+#     y_train_binaria = train_data['clase_binary'].to_numpy()
+#     y_train_binaria_2 = train_data['clase_binary2'].to_numpy()
 #     y_train_class=train_data["clase_ternaria"].to_numpy()
-#     w_train = train_data['clase_peso'].to_numpy()
+#     w_train = train_data['clase_weight'].to_numpy()
 
 #     # TEST
-#     X_test = test_data.drop(['clase_ternaria', 'clase_peso','clase_binaria','clase_binaria_2'], axis=1)
-#     y_test_binaria = test_data['clase_binaria'].to_numpy()
-#     y_test_binaria_2 = test_data['clase_binaria_2'].to_numpy()
+#     X_test = test_data.drop(['clase_ternaria', 'clase_weight','clase_binary','clase_binary2'], axis=1)
+#     y_test_binaria = test_data['clase_binary'].to_numpy()
+#     y_test_binaria_2 = test_data['clase_binary2'].to_numpy()
 #     y_test_class = test_data['clase_ternaria'].to_numpy()
-#     w_test = test_data['clase_peso'].to_numpy()
+#     w_test = test_data['clase_weight'].to_numpy()
 
 
 #     # A PREDECIR
-#     X_apred = apred_data.drop(['clase_ternaria', 'clase_peso','clase_binaria','clase_binaria_2'], axis=1)
+#     X_apred = apred_data.drop(['clase_ternaria', 'clase_weight','clase_binary','clase_binary2'], axis=1)
 #     y_apred=X_apred[["numero_de_cliente"]] # DF
   
 
@@ -656,22 +656,22 @@ def split_train_test_apred(n_exp:int|str,mes_train:list[int],mes_test:int|list[i
 #     apred_data = data_completa[data_completa['spliteo'] == 'apred'].drop(columns=['spliteo'])
     
 #     # TRAIN
-#     X_train = train_data.drop(['clase_ternaria', 'clase_peso', 'clase_binaria','clase_binaria_2'], axis=1)
-#     y_train_binaria = train_data['clase_binaria'].to_numpy()
-#     y_train_binaria_2 = train_data['clase_binaria_2'].to_numpy()
+#     X_train = train_data.drop(['clase_ternaria', 'clase_weight', 'clase_binary','clase_binary2'], axis=1)
+#     y_train_binaria = train_data['clase_binary'].to_numpy()
+#     y_train_binaria_2 = train_data['clase_binary2'].to_numpy()
 #     y_train_class=train_data["clase_ternaria"].to_numpy()
-#     w_train = train_data['clase_peso'].to_numpy()
+#     w_train = train_data['clase_weight'].to_numpy()
 
 #     # TEST
-#     X_test = test_data.drop(['clase_ternaria', 'clase_peso','clase_binaria','clase_binaria_2'], axis=1)
-#     y_test_binaria = test_data['clase_binaria'].to_numpy()
-#     y_test_binaria_2 = test_data['clase_binaria_2'].to_numpy()
+#     X_test = test_data.drop(['clase_ternaria', 'clase_weight','clase_binary','clase_binary2'], axis=1)
+#     y_test_binaria = test_data['clase_binary'].to_numpy()
+#     y_test_binaria_2 = test_data['clase_binary2'].to_numpy()
 #     y_test_class = test_data['clase_ternaria'].to_numpy()
-#     w_test = test_data['clase_peso'].to_numpy()
+#     w_test = test_data['clase_weight'].to_numpy()
 
 
 #     # A PREDECIR
-#     X_apred = apred_data.drop(['clase_ternaria', 'clase_peso','clase_binaria','clase_binaria_2'], axis=1)
+#     X_apred = apred_data.drop(['clase_ternaria', 'clase_weight','clase_binary','clase_binary2'], axis=1)
 #     y_apred=X_apred[["numero_de_cliente"]] # DF
   
 
@@ -754,22 +754,22 @@ def split_train_test_apred(n_exp:int|str,mes_train:list[int],mes_test:int|list[i
 #         train_data=undersampling(train_data , subsampleo,semilla)
 #     logger.info(f"Terminada la carga de df con columnas: {train_data.columns}")
 #     # TRAIN
-#     X_train = train_data.drop(['clase_ternaria', 'clase_peso', 'clase_binaria','clase_binaria_2'], axis=1)
-#     y_train_binaria = train_data['clase_binaria'].to_numpy()
-#     y_train_binaria_2 = train_data['clase_binaria_2'].to_numpy()
+#     X_train = train_data.drop(['clase_ternaria', 'clase_weight', 'clase_binary','clase_binary2'], axis=1)
+#     y_train_binaria = train_data['clase_binary'].to_numpy()
+#     y_train_binaria_2 = train_data['clase_binary2'].to_numpy()
 #     y_train_class=train_data["clase_ternaria"].to_numpy()
-#     w_train = train_data['clase_peso'].to_numpy()
+#     w_train = train_data['clase_weight'].to_numpy()
 
 #     # TEST
-#     X_test = test_data.drop(['clase_ternaria', 'clase_peso','clase_binaria','clase_binaria_2'], axis=1)
-#     y_test_binaria = test_data['clase_binaria'].to_numpy()
-#     y_test_binaria_2 = test_data['clase_binaria_2'].to_numpy()
+#     X_test = test_data.drop(['clase_ternaria', 'clase_weight','clase_binary','clase_binary2'], axis=1)
+#     y_test_binaria = test_data['clase_binary'].to_numpy()
+#     y_test_binaria_2 = test_data['clase_binary2'].to_numpy()
 #     y_test_class = test_data['clase_ternaria'].to_numpy()
-#     w_test = test_data['clase_peso'].to_numpy()
+#     w_test = test_data['clase_weight'].to_numpy()
 
 
 #     # A PREDECIR
-#     X_apred = apred_data.drop(['clase_ternaria', 'clase_peso','clase_binaria','clase_binaria_2'], axis=1)
+#     X_apred = apred_data.drop(['clase_ternaria', 'clase_weight','clase_binary','clase_binary2'], axis=1)
 #     y_apred=X_apred[["numero_de_cliente"]] # DF
   
 
@@ -855,22 +855,22 @@ def split_train_test_apred(n_exp:int|str,mes_train:list[int],mes_test:int|list[i
 #         train_data=undersampling(train_data , subsampleo,semilla)
 #     logger.info(f"Terminada la carga de df con columnas: {train_data.columns}")
 #     # TRAIN
-#     X_train = train_data.drop(['clase_ternaria', 'clase_peso', 'clase_binaria','clase_binaria_2'], axis=1)
-#     y_train_binaria = train_data['clase_binaria'].to_numpy()
-#     y_train_binaria_2 = train_data['clase_binaria_2'].to_numpy()
+#     X_train = train_data.drop(['clase_ternaria', 'clase_weight', 'clase_binary','clase_binary2'], axis=1)
+#     y_train_binaria = train_data['clase_binary'].to_numpy()
+#     y_train_binaria_2 = train_data['clase_binary2'].to_numpy()
 #     y_train_class=train_data["clase_ternaria"].to_numpy()
-#     w_train = train_data['clase_peso'].to_numpy()
+#     w_train = train_data['clase_weight'].to_numpy()
 
 #     # TEST
-#     X_test = test_data.drop(['clase_ternaria', 'clase_peso','clase_binaria','clase_binaria_2'], axis=1)
-#     y_test_binaria = test_data['clase_binaria'].to_numpy()
-#     y_test_binaria_2 = test_data['clase_binaria_2'].to_numpy()
+#     X_test = test_data.drop(['clase_ternaria', 'clase_weight','clase_binary','clase_binary2'], axis=1)
+#     y_test_binaria = test_data['clase_binary'].to_numpy()
+#     y_test_binaria_2 = test_data['clase_binary2'].to_numpy()
 #     y_test_class = test_data['clase_ternaria'].to_numpy()
-#     w_test = test_data['clase_peso'].to_numpy()
+#     w_test = test_data['clase_weight'].to_numpy()
 
 
 #     # A PREDECIR
-#     X_apred = apred_data.drop(['clase_ternaria', 'clase_peso','clase_binaria','clase_binaria_2'], axis=1)
+#     X_apred = apred_data.drop(['clase_ternaria', 'clase_weight','clase_binary','clase_binary2'], axis=1)
 #     y_apred=X_apred[["numero_de_cliente"]] # DF
   
 
@@ -984,20 +984,20 @@ def coerce_numeric_cols(df: pd.DataFrame, cols: list[str], fillna_val: float = 0
 #         train_data=undersampling(train_data , subsampleo,semilla)
 
 #     # --- TRAIN ---
-#     X_train = train_data.drop(["clase_ternaria", "clase_peso", "clase_binaria"])
-#     y_train_binaria = train_data.get_column("clase_binaria")     # pl.Series
+#     X_train = train_data.drop(["clase_ternaria", "clase_weight", "clase_binary"])
+#     y_train_binaria = train_data.get_column("clase_binary")     # pl.Series
 #     y_train_class  = train_data.get_column("clase_ternaria")    # pl.Series (str/categorical)
-#     w_train  = train_data.get_column("clase_peso")        # pl.Series (float)
+#     w_train  = train_data.get_column("clase_weight")        # pl.Series (float)
 
 #     # --- TEST ---
-#     X_test = test_data.drop(["clase_ternaria", "clase_peso", "clase_binaria"])
-#     y_test_binaria = test_data.get_column("clase_binaria")
+#     X_test = test_data.drop(["clase_ternaria", "clase_weight", "clase_binary"])
+#     y_test_binaria = test_data.get_column("clase_binary")
 #     y_test_class = test_data.get_column("clase_ternaria")
-#     w_test = test_data.get_column("clase_peso")
+#     w_test = test_data.get_column("clase_weight")
 
 
 #     # --- A PREDECIR ---
-#     X_apred = apred_data.drop(["clase_ternaria", "clase_peso", "clase_binaria"])
+#     X_apred = apred_data.drop(["clase_ternaria", "clase_weight", "clase_binary"])
 #     # y_apred como DF con la columna numero_de_cliente
 #     y_apred = X_apred.select(["numero_de_cliente"])  # pl.DataFrame
 
@@ -1005,14 +1005,14 @@ def coerce_numeric_cols(df: pd.DataFrame, cols: list[str], fillna_val: float = 0
 #     logger.info(f"X_test shape : {X_test.shape} / y_test shape : {y_test_binaria.len()}  del mes : {    X_test.select(pl.col('foto_mes').unique().sort()).to_series().to_list()}")
 #     logger.info(f"X_apred shape : {X_apred.shape} / y_apred shape : {y_apred.shape}  del mes : {X_apred.select(pl.col('foto_mes').unique().sort()).to_series().to_list()}")
 
-#     vc_train = y_train_binaria.value_counts().sort(by="clase_binaria")
-#     vc_test  = y_test_binaria.value_counts().sort(by="clase_binaria")
+#     vc_train = y_train_binaria.value_counts().sort(by="clase_binary")
+#     vc_test  = y_test_binaria.value_counts().sort(by="clase_binary")
 #     logger.info(
 #         f"cantidad de baja y continua en train: "
-#         f"{dict(zip(vc_train['clase_binaria'].to_list(), vc_train['count'].to_list()))}")
+#         f"{dict(zip(vc_train['clase_binary'].to_list(), vc_train['count'].to_list()))}")
 #     logger.info(
 #         f"cantidad de baja y continua en test: "
-#         f"{dict(zip(vc_test['clase_binaria'].to_list(), vc_test['count'].to_list()))}")
+#         f"{dict(zip(vc_test['clase_binary'].to_list(), vc_test['count'].to_list()))}")
 #     logger.info("Finalizacion label binario")
 #     logger.info("Transformacion a pandas ")
 #     # Conversión a pandas
@@ -1082,20 +1082,20 @@ def coerce_numeric_cols(df: pd.DataFrame, cols: list[str], fillna_val: float = 0
 #         train_data=undersampling(train_data , subsampleo,semilla)
 
 #     # TRAIN
-#     X_train = train_data.drop(['clase_ternaria', 'clase_peso', 'clase_binaria'], axis=1)
-#     y_train_binaria = train_data['clase_binaria']
+#     X_train = train_data.drop(['clase_ternaria', 'clase_weight', 'clase_binary'], axis=1)
+#     y_train_binaria = train_data['clase_binary']
 #     y_train_class=train_data["clase_ternaria"]
-#     w_train = train_data['clase_peso']
+#     w_train = train_data['clase_weight']
 
 #     # TEST
-#     X_test = test_data.drop(['clase_ternaria', 'clase_peso','clase_binaria'], axis=1)
-#     y_test_binaria = test_data['clase_binaria']
+#     X_test = test_data.drop(['clase_ternaria', 'clase_weight','clase_binary'], axis=1)
+#     y_test_binaria = test_data['clase_binary']
 #     y_test_class = test_data['clase_ternaria']
-#     w_test = test_data['clase_peso']
+#     w_test = test_data['clase_weight']
 
 
 #     # A PREDECIR
-#     X_apred = apred_data.drop(['clase_ternaria', 'clase_peso','clase_binaria'], axis=1)
+#     X_apred = apred_data.drop(['clase_ternaria', 'clase_weight','clase_binary'], axis=1)
 #     y_apred=X_apred[["numero_de_cliente"]] # DF
   
 
