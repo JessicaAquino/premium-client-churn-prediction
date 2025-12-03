@@ -1,5 +1,5 @@
 import polars as pl
-import src.infra.logger_wrapper as log
+import infra.logger_wrapper as log
 import duckdb
 from config.context import Context
 
