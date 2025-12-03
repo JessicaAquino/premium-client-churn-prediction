@@ -19,7 +19,8 @@ def feature_engineering_pipeline(ctx: Context):
         "month": True,
         "ctrx_norm": True,
         "mpayroll_over_edad": True,
-        "sum_prod_serv": True}
+        "sum_prod_serv": True,
+        "sum_ratio_ganancias_gastos": True}
     
     create_new_columns(all_cols, new_columns)
 
@@ -56,6 +57,9 @@ def create_new_columns(all_cols: list[str], config: dict):
 
     if "sum_prod_serv" in config:
         sql += add_sum_prod_serv(all_cols)
+
+    if "sum_ratio_ganancias_gastos" in config:
+        sql += add_sum_ratio_ganancias_gastos()
 
     sql += " FROM base"
 
@@ -136,7 +140,7 @@ def add_sum_prod_serv(all_cols: list[str]) -> str:
 
     return sql_parts
 
-def add_sum_ganancias_gastos(all_cols: list[str]):
+def add_sum_ratio_ganancias_gastos():
     ganancias_gastos = {
     "ganancias" : [
         # Ingresos por sueldo
