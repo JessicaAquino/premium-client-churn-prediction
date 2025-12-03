@@ -4,6 +4,7 @@ import config.conf as cf
 import config.logger_config as lc
 import config.sync_datasets as sd
 import core.preprocessing as pp
+import core.feature_engineering as fe
 import infra.loader_utils as lu
 
 from config.context import Context
@@ -34,6 +35,8 @@ def main(experiment_name: str = "CHALLENGE_03"):
             sd.save_database(ctx)
         if(pr == "delete_raws"):
             sd.delete_raw_datasets(ctx)
+        if(pr == "feature_engineering"):
+            fe.feature_engineering_pipeline(ctx)
     
     logger.info("Main execution finished")
 
