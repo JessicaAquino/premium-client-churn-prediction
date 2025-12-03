@@ -9,60 +9,35 @@ logger = logging.getLogger(__name__)
 
 @log.process_log
 def feature_engineering_pipeline(ctx: Context):
-    """
-    Ejecuta el pipeline de feature engineering completo
-
-    Parameters:
-    -----------
-    data_path : str
-        Ruta al archivo de datos
-    config : dict
-        Configuración del pipeline. Ejemplo:
-
-        "lag": {
-            "columns": ["col1", "col2"],
-            "n": 2   # number of lags
-        },
-        "delta": {
-            "columns": ["col1", "col2"],
-            "n": 2   # number of deltas
-        },
-        "minmax": {
-            "columns": ["col1", "col2"]
-        },
-        "ratio": {
-            "pairs": [["monto", "cantidad"], ["ingresos", "clientes"]]
-        },
-        "linreg": {
-            "columns": ["col1"],
-            "window": 3  # optional, for flexibility
-        }
-
-    Returns:
-    --------
-    pl.DataFrame
-        DataFrame con las nuevas features agregadas
-    """
     
     cols_with_types = cs.create_df_chiquito(ctx)
     all_cols = [c for c, _t in cols_with_types]
 
     logger.info(all_cols)
 
-    cols_lag_delta, cols_ratios = cs.col_selection(cols_with_types)
 
-    config = {
+    new_columns = {
         "month": True,
         "ctrx_norm": True,
         "mpayroll_over_edad": True,
-        "sum_prod_serv": True,
-        "lag": {"columns": cols_lag_delta, "n": 2},
-        "delta": {"columns": cols_lag_delta, "n": 2},
-        "minmax": {"columns": cols_lag_delta},
-        "ratio": {"pairs": cols_ratios},
-        "linreg": {"columns": cols_lag_delta[:10], "window": 3}
+        "sum_prod_serv": True}
+    
+    create_new_columns(all_cols, new_columns)
+
+    historic_fe = {
+        "lag": 2,
+        "delta": 2,
+        "minmax": True,
+        "ratio": True,
+        "linreg": 3
     }
 
+    create_lag_delta_linreg_minmax_ratio(historic_fe, all_cols)
+
+    return True
+
+def create_new_columns(all_cols: list[str], config: dict):
+    
     sql = """
         CREATE OR REPLACE TABLE df_init AS 
         WITH base AS (
@@ -70,8 +45,6 @@ def feature_engineering_pipeline(ctx: Context):
         )
         SELECT *
     """
-
-    window_clause = ""
     
     if "month" in config:
         sql += add_month_num()
@@ -85,27 +58,9 @@ def feature_engineering_pipeline(ctx: Context):
     if "sum_prod_serv" in config:
         sql += add_sum_prod_serv(all_cols)
 
-    if "lag" in config:
-        sql += add_lag_sql(config["lag"])
-
-    if "delta" in config:
-        sql += add_delta_sql(config["delta"])
-
-    if "minmax" in config:
-        sql += add_minmax_sql(config["minmax"])
-    
-    if "ratio" in config:
-        sql += add_ratio_sql(config["ratio"])
-
-    if "linreg" in config:
-        linreg_str, window_clause = add_linreg_sql(config["linreg"])
-        sql += linreg_str
-
     sql += " FROM base"
-    if window_clause != "":
-        sql += " " + window_clause
 
-    logger.info(f"Query:\n{sql}")
+    logger.info(f"Query new columns:\n{sql}")
 
     # conn = duckdb.connect(ctx.database)
     # conn.execute(sql)
@@ -119,8 +74,8 @@ def add_month_num() -> str:
 
 def add_ctrx_norm() -> str:
     ctrx_norm = """
-    , if(cliente_antiguedad= 1, ctrx_quarter * 5.0 ,
-        if(cliente_antiguedad = 2 ,ctrx_quarter * 2.0,
+    , if(cliente_antiguedad= 1, ctrx_quarter * 5.0 , 
+        if(cliente_antiguedad = 2 ,ctrx_quarter * 2.0, 
             if (cliente_antiguedad = 3 , ctrx_quarter * 1.2 , 
                 ctrx_quarter))) 
             as ctrx_quarter_normalizado
@@ -136,12 +91,8 @@ def add_mpayroll_over_edad() -> str:
 def add_sum_prod_serv(all_cols: list[str]) -> str:
     """
     Generate SQL expressions that compute aggregated 'product/service' counts.
-
-    This replicates the logic of suma_de_prod_servs(), but inlined inside
-    the unified DuckDB SQL used in the FE pipeline.
     """
 
-    # Define groups exactly as in cols_conteo_servicios_productos()
     dict_prod_serv = {
         "master_visa_productos": [
             "Master_msaldototal", "Master_mconsumototal", "Master_mpagado", "Master_mlimitecompra",
@@ -185,6 +136,54 @@ def add_sum_prod_serv(all_cols: list[str]) -> str:
         sql_parts += f", ({sum_expr}) AS {feature_name}"
 
     return sql_parts
+
+def create_lag_delta_linreg_minmax_ratio(feature_dict: dict, all_cols: list[str]):
+
+    cols_lag_delta, cols_ratios = cs.col_selection(all_cols)
+     
+    historic_fe = {
+        "lag": {"columns": cols_lag_delta, "n": feature_dict["lag"]},
+        "delta": {"columns": cols_lag_delta, "n": feature_dict["delta"]},
+        "minmax": {"columns": cols_lag_delta},
+        "ratio": {"pairs": cols_ratios},
+        "linreg": {"columns": cols_lag_delta[:10], "window": feature_dict["linreg"]}
+    }
+
+    sql = """
+        CREATE OR REPLACE TABLE df_init AS 
+        WITH base AS (
+            SELECT * FROM df_init
+        )
+        SELECT *
+    """
+
+    window_clause = ""
+
+    if "lag" in historic_fe:
+        sql += add_lag_sql(historic_fe["lag"])
+
+    if "delta" in historic_fe:
+        sql += add_delta_sql(historic_fe["delta"])
+
+    if "minmax" in historic_fe:
+        sql += add_minmax_sql(historic_fe["minmax"])
+    
+    if "ratio" in historic_fe:
+        sql += add_ratio_sql(historic_fe["ratio"])
+
+    if "linreg" in historic_fe:
+        linreg_str, window_clause = add_linreg_sql(historic_fe["linreg"])
+        sql += linreg_str
+
+    sql += " FROM base"
+    if window_clause != "":
+        sql += " " + window_clause
+
+    logger.info(f"Query fe:\n{sql}")
+
+    # conn = duckdb.connect(ctx.database)
+    # conn.execute(sql)
+    # conn.close()
 
 def add_lag_sql(config_lag: dict) -> str:    
     lag_str = ""
