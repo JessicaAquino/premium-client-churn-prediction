@@ -38,28 +38,34 @@ def feature_engineering_pipeline(ctx: Context):
     VENTANA = 6
 
     # PERCENTIL
-    df_init_chiquito=cs.create_df_chiquito(ctx) # Para agregar las columnas de las corregidas
-    cols_percentil,_,_=cs.col_selection(df_init_chiquito)
-    feature_engineering_percentil(ctx, df_init_chiquito ,cols_percentil,bins=20)
+    df_init_chiquito = cs.create_df_chiquito(ctx)
+    all_cols = [c for c, _t in df_init_chiquito]
+
+    cols_percentil, _, _ = cs.col_selection(df_init_chiquito)
+    feature_engineering_percentil(ctx, all_cols, cols_percentil, bins=20)
 
     # RATIOS
-    df_init_chiquito=cs.create_df_chiquito(ctx)
-    _,_,cols_ratios = cs.col_selection(df_init_chiquito)
-    feature_engineering_ratio(ctx, df_init_chiquito,cols_ratios)
+    df_init_chiquito = cs.create_df_chiquito(ctx)
+    all_cols = [c for c, _t in df_init_chiquito]
+
+    _, _, cols_ratios = cs.col_selection(df_init_chiquito)
+    feature_engineering_ratio(ctx, all_cols, cols_ratios)
  
 
-    df_init_chiquito=cs.create_df_chiquito(ctx)
-    _,  cols_lag_delta_max_min_regl  ,   _ = cs.col_selection(df_init_chiquito)
-    feature_engineering_lag(ctx, df_init_chiquito,cols_lag_delta_max_min_regl,ORDEN_LAGS)
-    feature_engineering_delta(ctx, df_init_chiquito,cols_lag_delta_max_min_regl,ORDEN_LAGS)
-    feature_engineering_linreg(ctx, df_init_chiquito , cols_lag_delta_max_min_regl,VENTANA)
-    feature_engineering_max_min(ctx, df_init_chiquito,cols_lag_delta_max_min_regl ,VENTANA)
+    df_init_chiquito = cs.create_df_chiquito(ctx)
+    all_cols = [c for c, _t in df_init_chiquito]
 
-    feature_engineering_lag_orden_fijo(ctx, df_init_chiquito,cols_lag_delta_max_min_regl,6)
-    feature_engineering_lag_orden_fijo(ctx, df_init_chiquito,cols_lag_delta_max_min_regl,12)
-    feature_engineering_delta_orden_fijo(ctx, df_init_chiquito,cols_lag_delta_max_min_regl,6)
-    feature_engineering_delta_orden_fijo(ctx, df_init_chiquito,cols_lag_delta_max_min_regl,12)
-    feature_engineering_mean(ctx, df_init_chiquito,cols_lag_delta_max_min_regl , VENTANA)
+    _, cols_lag_delta_max_min_regl, _ = cs.col_selection(df_init_chiquito)
+
+    feature_engineering_lag(ctx, all_cols, cols_lag_delta_max_min_regl, ORDEN_LAGS)
+    feature_engineering_delta(ctx, all_cols, cols_lag_delta_max_min_regl, ORDEN_LAGS)
+    feature_engineering_linreg(ctx, all_cols, cols_lag_delta_max_min_regl, VENTANA)
+    feature_engineering_max_min(ctx, all_cols, cols_lag_delta_max_min_regl, VENTANA)
+    feature_engineering_lag_orden_fijo(ctx, all_cols, cols_lag_delta_max_min_regl, 6)
+    feature_engineering_lag_orden_fijo(ctx, all_cols, cols_lag_delta_max_min_regl, 12)
+    feature_engineering_delta_orden_fijo(ctx, all_cols, cols_lag_delta_max_min_regl, 6)
+    feature_engineering_delta_orden_fijo(ctx, all_cols, cols_lag_delta_max_min_regl, 12)
+    feature_engineering_mean(ctx, all_cols, cols_lag_delta_max_min_regl, VENTANA)
 
     return True
 
