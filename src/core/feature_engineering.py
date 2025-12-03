@@ -22,7 +22,7 @@ def feature_engineering_pipeline(ctx: Context):
         "sum_prod_serv": True,
         "sum_ratio_ganancias_gastos": True}
     
-    create_new_columns(all_cols, new_columns)
+    create_new_columns(ctx, all_cols, new_columns)
 
     historic_fe = {
         "lag": 2,
@@ -32,11 +32,11 @@ def feature_engineering_pipeline(ctx: Context):
         "linreg": 3
     }
 
-    create_lag_delta_linreg_minmax_ratio(historic_fe, cols_with_types)
+    create_lag_delta_linreg_minmax_ratio(ctx, historic_fe, cols_with_types)
 
     return True
 
-def create_new_columns(all_cols: list[str], config: dict):
+def create_new_columns(ctx: Context, all_cols: list[str], config: dict):
     
     sql = """
         CREATE OR REPLACE TABLE df_init AS 
@@ -65,9 +65,9 @@ def create_new_columns(all_cols: list[str], config: dict):
 
     logger.info(f"Query new columns:\n{sql}")
 
-    # conn = duckdb.connect(ctx.database)
-    # conn.execute(sql)
-    # conn.close()
+    conn = duckdb.connect(ctx.database)
+    conn.execute(sql)
+    conn.close()
 
     return True
 
@@ -194,7 +194,7 @@ def add_sum_ratio_ganancias_gastos():
 
     return sql
 
-def create_lag_delta_linreg_minmax_ratio(feature_dict: dict, cols_with_types: list[tuple[str, str]]):
+def create_lag_delta_linreg_minmax_ratio(ctx: Context, feature_dict: dict, cols_with_types: list[tuple[str, str]]):
 
     cols_lag_delta, cols_ratios = cs.col_selection(cols_with_types)
      
@@ -238,9 +238,9 @@ def create_lag_delta_linreg_minmax_ratio(feature_dict: dict, cols_with_types: li
 
     logger.info(f"Query fe:\n{sql}")
 
-    # conn = duckdb.connect(ctx.database)
-    # conn.execute(sql)
-    # conn.close()
+    conn = duckdb.connect(ctx.database)
+    conn.execute(sql)
+    conn.close()
 
 def add_lag_sql(config_lag: dict) -> str:    
     lag_str = ""
