@@ -20,17 +20,17 @@ ERR_COLS = (
 )
 
 def _existencia_tabla_duckdb()->bool:
-    logger.info("Comienzo de Comprobando la existencia de la tabla df_completo")
+    logger.info("Comienzo de Comprobando la existencia de la tabla df_init")
     sql = """
             SELECT EXISTS(
             SELECT 1 
             FROM information_schema.tables 
-            WHERE table_name = 'df_completo')"""
+            WHERE table_name = 'df_init')"""
     conn=duckdb.connect(PATH_DATA_BASE_DB)
     existe=conn.execute(sql).fetchone()[0]
     conn.close()
     logger.info(f"La tabla existe ? : {existe}")
-    logger.info("FIN de Comprobando la existencia de la tabla df_completo")
+    logger.info("FIN de Comprobando la existencia de la tabla df_init")
     return existe
 def _existencia_parquet()->bool:
     logger.info(f"Comienzo de la verificacion de la existencia del parquet en {FILE_INPUT_DATA_PARQUET}")
@@ -42,7 +42,7 @@ def _existencia_parquet()->bool:
 
 def _create_table_de_parquet():
     logger.info("Comienzo de la creacion de la tabla a partir del parquet")
-    sql = f"""create or replace table df_completo as 
+    sql = f"""create or replace table df_init as 
                 select * from read_parquet('{FILE_INPUT_DATA_PARQUET}')"""
     conn=duckdb.connect(PATH_DATA_BASE_DB, read_only=False)
     conn.execute(sql)
@@ -50,7 +50,7 @@ def _create_table_de_parquet():
     logger.info("Fin de la creacion de la tabla a partir del parquet")
 
 def verificacion_o_creacion_tabla():
-    logger.info("Comienzo del proceso inicial de verif o creacion de df_completo")
+    logger.info("Comienzo del proceso inicial de verif o creacion de df_init")
     if _existencia_tabla_duckdb():
         return
     elif _existencia_parquet():
@@ -90,7 +90,7 @@ def verificacion_o_creacion_tabla():
 #     for m in mes_train[1:]:    
 #         mes_train_sql += f",{m}"
 #     sql_train=f"""select {sql_canaritos} * {exclude} 
-#                 from df_completo
+#                 from df_init
 #                 where foto_mes IN ({mes_train_sql})"""
 #     logger.info(f"sql train query : {sql_train}")
 #     if isinstance(mes_test,list):
@@ -98,18 +98,18 @@ def verificacion_o_creacion_tabla():
 #         for m in mes_test[1:]:    
 #             mes_test_sql += f",{m}"
 #         sql_test=f"""select {sql_canaritos} * {exclude}
-#                     from df_completo
+#                     from df_init
 #                     where foto_mes IN ({mes_test_sql})"""
 #     elif isinstance(mes_test,int):
 #         mes_test_sql = f"{mes_test}"
 #         sql_test=f"""select {sql_canaritos} * {exclude}
-#                     from df_completo
+#                     from df_init
 #                     where foto_mes = {mes_test_sql}"""
 #     logger.info(f"sql test query : {sql_test}")
         
 #     mes_apred_sql = f"{mes_apred}"
 #     sql_apred=f"""select {sql_canaritos} * {exclude}
-#                 from df_completo
+#                 from df_init
 #                 where foto_mes = {mes_apred_sql}"""
 #     logger.info(f"sql apred query : {sql_apred}")
     
@@ -213,7 +213,7 @@ def split_train_test_apred(n_exp:int|str,mes_train:list[int],mes_test:int|list[i
     sql_train = f"""
         WITH continuas AS (
             SELECT DISTINCT numero_de_cliente
-            FROM df_completo
+            FROM df_init
             WHERE foto_mes IN ({mes_train_sql})
             AND clase_ternaria = 'Continua'
         ),
@@ -230,7 +230,7 @@ def split_train_test_apred(n_exp:int|str,mes_train:list[int],mes_test:int|list[i
 
 
     sql_train += f"""SELECT {sql_canaritos} * {exclude} 
-                    FROM df_completo 
+                    FROM df_init 
                     WHERE (foto_mes IN ({mes_train_sql}) AND clase_ternaria != 'Continua' ) OR 
                     (foto_mes IN ({mes_train_sql}) AND clase_ternaria = 'Continua' AND numero_de_cliente IN
                                         (SELECT numero_de_cliente 
@@ -243,18 +243,18 @@ def split_train_test_apred(n_exp:int|str,mes_train:list[int],mes_test:int|list[i
         for m in mes_test[1:]:    
             mes_test_sql += f",{m}"
         sql_test=f"""select {sql_canaritos} * {exclude}
-                    from df_completo
+                    from df_init
                     where foto_mes IN ({mes_test_sql})"""
     elif isinstance(mes_test,int):
         mes_test_sql = f"{mes_test}"
         sql_test=f"""select {sql_canaritos} * {exclude}
-                    from df_completo
+                    from df_init
                     where foto_mes = {mes_test_sql}"""
     logger.info(f"sql test query : {sql_test}")
         
     mes_apred_sql = f"{mes_apred}"
     sql_apred=f"""select {sql_canaritos} * {exclude}
-                from df_completo
+                from df_init
                 where foto_mes = {mes_apred_sql}"""
     logger.info(f"sql apred query : {sql_apred}")
 
@@ -354,7 +354,7 @@ def split_train_test_apred(n_exp:int|str,mes_train:list[int],mes_test:int|list[i
 #     sql_continuas_sample = f"""
 #     CREATE TEMP TABLE continuas_sample AS
 #     SELECT DISTINCT numero_de_cliente
-#     FROM df_completo
+#     FROM df_init
 #     WHERE foto_mes IN ({mes_train_sql})
 #     AND clase_ternaria = 'Continua'
 #     AND RANDOM() < {subsampleo}
@@ -365,7 +365,7 @@ def split_train_test_apred(n_exp:int|str,mes_train:list[int],mes_test:int|list[i
 
 
 #     sql_train = f"""SELECT {sql_canaritos} * {exclude} 
-#                     FROM df_completo 
+#                     FROM df_init 
 #                     WHERE (foto_mes IN ({mes_train_sql}) AND clase_ternaria != 'Continua' ) OR 
 #                     (foto_mes IN ({mes_train_sql}) AND clase_ternaria = 'Continua' AND numero_de_cliente IN
 #                                         (SELECT numero_de_cliente 
@@ -378,18 +378,18 @@ def split_train_test_apred(n_exp:int|str,mes_train:list[int],mes_test:int|list[i
 #         for m in mes_test[1:]:    
 #             mes_test_sql += f",{m}"
 #         sql_test=f"""select {sql_canaritos} * {exclude}
-#                     from df_completo
+#                     from df_init
 #                     where foto_mes IN ({mes_test_sql})"""
 #     elif isinstance(mes_test,int):
 #         mes_test_sql = f"{mes_test}"
 #         sql_test=f"""select {sql_canaritos} * {exclude}
-#                     from df_completo
+#                     from df_init
 #                     where foto_mes = {mes_test_sql}"""
 #     logger.info(f"sql test query : {sql_test}")
         
 #     mes_apred_sql = f"{mes_apred}"
 #     sql_apred=f"""select {sql_canaritos} * {exclude}
-#                 from df_completo
+#                 from df_init
 #                 where foto_mes = {mes_apred_sql}"""
 #     logger.info(f"sql apred query : {sql_apred}")
 
@@ -496,7 +496,7 @@ def split_train_test_apred(n_exp:int|str,mes_train:list[int],mes_test:int|list[i
 #     SELECT numeros_unicos AS numero_de_cliente
 #     FROM (
 #         SELECT DISTINCT numero_de_cliente AS numeros_unicos
-#         FROM df_completo
+#         FROM df_init
 #         WHERE foto_mes IN ({mes_train_sql})
 #         AND clase_ternaria = 'Continua'
 #     )
@@ -529,7 +529,7 @@ def split_train_test_apred(n_exp:int|str,mes_train:list[int],mes_test:int|list[i
 #             WHEN foto_mes IN ({mes_test_sql}) THEN 'test'
 #             WHEN foto_mes = {mes_apred_sql} THEN 'apred'
 #         END AS spliteo
-#     FROM df_completo
+#     FROM df_init
 #     WHERE foto_mes IN ({mes_train_sql}, {mes_test_sql}, {mes_apred_sql})
 #     """
 
@@ -621,7 +621,7 @@ def split_train_test_apred(n_exp:int|str,mes_train:list[int],mes_test:int|list[i
 #     sql_completo = f"""with continuas_train as 
 #     (SELECT DISTINCT(numero_de_cliente) as numeros_unicos,
 #     CASE WHEN RANDOM() < {subsampleo} THEN 1 ELSE 0 END AS flag_subsampleo
-#     FROM df_completo 
+#     FROM df_init 
 #     WHERE foto_mes in ({mes_train_sql}) AND clase_ternaria = 'Continua')
 #     """
 
@@ -640,7 +640,7 @@ def split_train_test_apred(n_exp:int|str,mes_train:list[int],mes_test:int|list[i
 #                         WHEN foto_mes IN ({mes_test_sql}) THEN 'test' 
 #                         WHEN foto_mes = {mes_apred_sql} THEN 'apred'
 #                     END AS spliteo
-#                     FROM df_completo 
+#                     FROM df_init 
 #                     WHERE foto_mes IN ({mes_train_sql}, {mes_test_sql},{mes_apred_sql})"""
 
 #     logger.info(f"sql completo query : {sql_completo}")
@@ -735,7 +735,7 @@ def split_train_test_apred(n_exp:int|str,mes_train:list[int],mes_test:int|list[i
 #                             WHEN foto_mes IN ({mes_test_sql}) THEN 'test' 
 #                             WHEN foto_mes = {mes_apred_sql} THEN 'apred'
 #                         END AS spliteo
-#                         FROM df_completo
+#                         FROM df_init
 #                         WHERE foto_mes IN ({mes_train_sql}, {mes_test_sql},{mes_apred_sql})"""
 #     logger.info(f"sql apred query : {sql_completo}")
 
@@ -821,7 +821,7 @@ def split_train_test_apred(n_exp:int|str,mes_train:list[int],mes_test:int|list[i
 #     for m in mes_train[1:]:    
 #         mes_train_sql += f",{m}"
 #     sql_train=f"""select {sql_canaritos} * {exclude} 
-#                 from df_completo
+#                 from df_init
 #                 where foto_mes IN ({mes_train_sql})"""
 #     logger.info(f"sql train query : {sql_train}")
 #     if isinstance(mes_test,list):
@@ -829,18 +829,18 @@ def split_train_test_apred(n_exp:int|str,mes_train:list[int],mes_test:int|list[i
 #         for m in mes_test[1:]:    
 #             mes_test_sql += f",{m}"
 #         sql_test=f"""select {sql_canaritos} * {exclude}
-#                     from df_completo
+#                     from df_init
 #                     where foto_mes IN ({mes_test_sql})"""
 #     elif isinstance(mes_test,int):
 #         mes_test_sql = f"{mes_test}"
 #         sql_test=f"""select {sql_canaritos} * {exclude}
-#                     from df_completo
+#                     from df_init
 #                     where foto_mes = {mes_test_sql}"""
 #     logger.info(f"sql test query : {sql_test}")
         
 #     mes_apred_sql = f"{mes_apred}"
 #     sql_apred=f"""select {sql_canaritos} * {exclude}
-#                 from df_completo
+#                 from df_init
 #                 where foto_mes = {mes_apred_sql}"""
 #     logger.info(f"sql apred query : {sql_apred}")
     
@@ -955,24 +955,24 @@ def coerce_numeric_cols(df: pd.DataFrame, cols: list[str], fillna_val: float = 0
 #     for m in mes_train[1:]:    
 #         mes_train_sql += f",{m}"
 #     sql_train=f"""select *
-#                 from df_completo
+#                 from df_init
 #                 where foto_mes IN ({mes_train_sql})"""
 #     if isinstance(mes_test,list):
 #         mes_test_sql = f"{mes_test[0]}"
 #         for m in mes_test[1:]:    
 #             mes_test_sql += f",{m}"
 #         sql_test=f"""select *
-#                     from df_completo
+#                     from df_init
 #                     where foto_mes IN ({mes_test_sql})"""
 #     elif isinstance(mes_test,int):
 #         mes_test_sql = f"{mes_test}"
 #         sql_test=f"""select *
-#                     from df_completo
+#                     from df_init
 #                     where foto_mes = {mes_test_sql}"""
         
 #     mes_apred_sql = f"{mes_apred}"
 #     sql_apred=f"""select *
-#                 from df_completo
+#                 from df_init
 #                 where foto_mes = {mes_apred_sql}"""
     
 #     conn=duckdb.connect(PATH_DATA_BASE_DB)
