@@ -42,6 +42,8 @@ nohup python3 -u src/main.py > ../../vm_execution_01.log 2>&1 &
 
 ### Part02
 
+zLightGBM must be installed. The installation commands are below.
+
 Create and activate the environment (if don't)
 ```bash
 cd premium-client-churn-prediction
@@ -61,6 +63,17 @@ Now! We execute the main.py as a background process. The output will be saved on
 nohup python3 -u main.py > ../../vm_execution_02.log 2>&1 &
 ```
 
+### zLightGBM installation
+
+```bash
+cd
+rm -rf  LightGBM
+git clone --recursive  https://github.com/dmecoyfin/LightGBM
+source premium-client-churn-prediction/.venv/bin/activate
+pip uninstall --yes lightgbm
+cd ~/LightGBM
+./build-python.sh  install
+```
 
 
 ### Bonus
