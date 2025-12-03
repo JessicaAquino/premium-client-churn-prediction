@@ -1,6 +1,6 @@
 import logging
 import duckdb
-import src.infra.logger_wrapper as log
+import infra.logger_wrapper as log
 import core.col_selection as cs
 
 from config.context import Context
