@@ -1,0 +1,152 @@
+COMPETENCIA: 3
+# proceso_ppal : 
+    # 0 -analisis_exploratorio 
+    # 1- creacion_target_clase_ternaria 
+    # 2- feat_eng
+    # 3- bayesiana  | test_baye 
+    # 4- experimento |  test_exp
+    # 5- prediccion_final | test_prediccion_final |
+PROCESO_PPAL: "experimento"
+# SUSBAMPLEO EN PORCENTAJE
+SUBSAMPLEO : 0.1 # solo para baye y exp y pred final
+
+
+configuracion_semilla:
+ # Completar con la info de las semillas
+  SEMILLA: 782911
+  SEMILLAS: [811157, 502717, 782911, 464939, 213713]
+
+configuracion_feat_eng : 
+  N_FE : 1
+  VENTANA: 6
+  ORDEN_LAGS: 3
+
+configuracion_bayesiana:
+  TIPO_BAYESIANA : "ZLGBM" # OB | ZS | ZLGBM
+  N_BAYESIANA: "302"
+  N_SEMILLAS_BAY : 50
+  N_TRIALS: 40
+  N_BOOSTS: 1000
+  MES_VAL_BAYESIANA: 202104
+  UMBRAL: 0.025
+  GANANCIA: 780000
+  ESTIMULO: 20000
+  N_FOLDS: 5 # No hace nada
+  MODEL_BAY : "lgbm" #| "lgbm"
+
+configuracion_canaritos:
+  N_CANARITOS : 5
+  MIN_DATA_IN_LEAF : 500 #200 #2000
+  LEARNING_RATE : 1.0
+  GRADIENT_BOUND : 0.4 #0.01
+  NUM_LEAVES :  9999 #300
+  FEATURE_FRACTION : 0.5 #0.8
+  BAGGING_FRACTION : 1 #0.8
+  BAGGING_FREQ : 0 # 1
+  MAX_BIN : 31  
+  NUM_ITERATIONS : 33 #64 #1000
+  EARLY_STOPPING_ROUNDS : 200 #No se esta usando
+  FIRST_METRIC_ONLY : False 
+  BOOST_FROM_AVERAGE : True
+  FEATURE_PRE_FILTER : False # True (True es el valor determinado)
+  FORCE_ROW_WISE : True 
+
+
+
+configuracion_experimentos:
+  N_EXPERIMENTO :  "..comp3_exp01
+  TOP_MODELS : 1 # ZS =1
+  MODEL_EXP : "lgbm" #| "lgbm"
+
+
+configuracion_gcp:
+ # Completar con la info de la GCP
+  IN_GCP: True
+
+configuracion_paths:
+  place_path:
+    LOCAL_PATH: ""
+    GCP_PATH: "/home/jessica_aquino_torrez/buckets/b1/"
+  PATH_LOGS: "logs/"
+  PATH_LOG_GLOBAL : "global_log/"
+
+  path_inputs : 
+    PATH_INPUT_DATA : "datasets/"
+    PATH_DATA_BASE_DB : "datasets/churn_bank_db.duckdb"
+  path_outputs:
+    PATH_OUTPUT: "outputs/"
+    PATH_OUTPUT_DATA: "outputs/data_outputs/"
+    PATH_OUTPUT_BAYESIAN: "outputs/bayesian_outputs/"
+    PATH_OUTPUT_FINALES: "outputs/finales_outputs/"
+    PATH_OUTPUT_EXPERIMENTOS: "outputs/experimentos_outputs/"
+    PATH_OUTPUT_EDA : "outputs/eda_outputs/"
+
+  path_outputs_bayesian:
+    PATH_OUTPUT_BAYESIAN_DB: "outputs/bayesian_outputs/db/"
+    PATH_OUTPUT_BAYESIAN_BESTPARAMS: "outputs/bayesian_outputs/best_params/"
+    PATH_OUTPUT_BAYESIAN_BEST_ITER: "outputs/bayesian_outputs/best_iters/"
+    PATH_OUTPUT_BAYESIAN_GRAF: "outputs/bayesian_outputs/grafico_bayesiana/"
+  
+  path_outputs_experimentos:
+    PATH_OUTPUT_EXP_MODEL : "outputs/experimentos_outputs/exp_model/"
+    PATH_OUTPUT_EXP_FEAT_IMP : "outputs/experimentos_outputs/exp_feat_importances/"
+    PATH_OUTPUT_EXP_GRAF_GAN_HIST_GRILLA: "outputs/experimentos_outputs/exp_graf_ganancias_hist_grilla/"
+    PATH_OUTPUT_EXP_GRAF_HIST_TOTAL: "outputs/experimentos_outputs/exp_graf_ganancias_hist_total/"
+    PATH_OUTPUT_EXP_GRAF_HIST_SEMILLA: "outputs/experimentos_outputs/exp_graf_ganancias_hist_semillas/"
+    PATH_OUTPUT_EXP__GRAF_CURVA_GANANCIA: "outputs/experimentos_outputs/exp_graf_curva_ganancia/"
+    PATH_OUTPUT_EXP_UMBRAL: "outputs/experimentos_outputs/exp_umbrales/"
+    PATH_OUTPUT_EXP_PREDICTION : "outputs/experimentos_outputs/prediction/"
+
+  path_outputs_finales:
+    PATH_OUTPUT_FINALES_MODEL: "outputs/finales_outputs/model/"
+    PATH_OUTPUT_FINALES_FEAT_IMP: "outputs/finales_outputs/feature_importances/"
+    PATH_OUTPUT_FINALES_PREDICCION_FINAL: "outputs/finales_outputs/final_prediction/"
+
+
+configuracion_competencia_1:
+  FILE_INPUT_DATA: "datasets/competencia_01.csv"
+  FILE_INPUT_DATA_CRUDO: "datasets/competencia_01_crudo.csv"
+  FILE_INPUT_DATA_PARQUET : "datasets/competencia_01_final.parquet"
+  MES_TRAIN: [202101, 202102, 202103]
+  MES_TEST: [202104]
+  MES_A_PREDECIR: 202106
+  MES_01: 202101
+  MES_02: 202102
+  MES_03: 202103
+  MES_04: 202104
+  MES_05: 202105
+
+configuracion_competencia_2:
+  FILE_INPUT_DATA: "datasets/competencia_02.csv"
+  FILE_INPUT_DATA_CRUDO_2: "datasets/competencia_02_crudo.csv.gz"
+  FILE_INPUT_DATA_PARQUET : "datasets/competencia_02_final.parquet"
+  MES_TRAIN: [202009,202010,202011,202012,202101,202102] #NO HACE NADA AHORA Faltan:[202003,202004,202005,202006,202007,202008,202009,202010]
+  MES_TRAIN_04: [202001,202002,202003,202004,202005,202007,202008,202009,202010,202011,202012,202101,202102]
+  MES_TRAIN_06: [202001,202002,202003,202004,202005,202007,202008,202009,202010,202011,202012,202101,202102,202103,202104]
+  MES_TRAIN_08: [202001,202002,202003,202004,202005,202007,202008,202009,202010,202011,202012,202101,202102,202103,202104,202105,202106]
+  MES_TEST: [202104,202106]
+  MES_A_PREDECIR: 202108
+  UMBRAL_CLIENTE : 11500
+  MES_01: 202101
+  MES_02: 202102
+  MES_03: 202103
+  MES_04: 202104
+  MES_05: 202105
+
+configuracion_competencia_3:
+  FILE_INPUT_DATA: "datasets/competencia_03.csv"
+  FILE_INPUT_DATA_CRUDO_2: "datasets/competencia_02_crudo.csv.gz"
+  FILE_INPUT_DATA_CRUDO_3: "datasets/competencia_03_crudo.csv.gz"
+  FILE_INPUT_DATA_PARQUET : "datasets/competencia_03_final.parquet"
+  MES_TRAIN: [201901, 201902, 201903, 201904,201905,201906,201907,201908,201909,201911,201912,202001,202002,202003,202004,202005,202007,202008,202009,202010,202011,202012,202101,202102,202104] #NO HACE NADA AHORA Faltan:[202003,202004,202005,202006,202007,202008,202009,202010]
+  MES_TRAIN_06: [201901, 201902, 201903, 201904,201905,201906,201907,201908,201909,201911,201912,202001,202002,202003,202004,202005,202007,202008,202009,202010,202011,202012,202101,202102,202103,202104] #NO HACE NADA AHORA Faltan:[202003,202004,202005,202006,202007,202008,202009,202010]
+  MES_TRAIN_07: [201901, 201902, 201903, 201904,201905,201906,201907,201908,201909,201911,201912,202001,202002,202003,202004,202005,202007,202008,202009,202010,202011,202012,202101,202102,202103,202104,202105] 
+  MES_TRAIN_09: [201901, 201902, 201903, 201904,201905,201906,201907,201908,201909,201911,201912,202001,202002,202003,202004,202005,202007,202008,202009,202010,202011,202012,202101,202102,202103,202104,202105,202106,202107] 
+  MES_TEST: [202106,202107]
+  MES_A_PREDECIR: 202109
+  UMBRAL_CLIENTE : 11500
+  MES_01: 202101
+  MES_02: 202102
+  MES_03: 202103
+  MES_04: 202104
+  MES_05: 202105

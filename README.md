@@ -2,37 +2,7 @@
 
 ## Project Installation
 
-### Local
-
-Create virtual environment
-
-```bash
-python -m venv .venv
-```
-
-Activate venv
-
-```bash
-# Windows
-.venv\Scripts\activate
-
-# Linux
-source .venv/Scripts/activate
-```
-
-Install requirements.txt
-
-```
-pip install -r requirements.txt
-```
-
-Execute main
-
-```
-python -u main.py
-```
-
-### Virtual Machine
+### Part01
 
 First! Check if python and venv are installed
 ```bash
@@ -60,14 +30,38 @@ source .venv/bin/activate
 
 Install requirements (for the VM)
 ```bash
+cd parte1
 pip install -r vm_requirements.txt
 ```
 
 Now! We execute the main.py as a background process. The output will be saved on the vm_execution.log.
 ```bash
 # With this, we send the process to background
-nohup python3 -u src/main.py > ../vm_execution_2.log 2>&1 &
+nohup python3 -u src/main.py > ../../vm_execution_01.log 2>&1 &
 ```
+
+### Part02
+
+Create and activate the environment (if don't)
+```bash
+cd premium-client-churn-prediction
+
+source .venv/bin/activate
+```
+
+Install requirements (for the VM)
+```bash
+cd parte2
+pip install -r vm_requirements.txt
+```
+
+Now! We execute the main.py as a background process. The output will be saved on the vm_execution.log.
+```bash
+# With this, we send the process to background
+nohup python3 -u main.py > ../../vm_execution_02.log 2>&1 &
+```
+
+
 
 ### Bonus
 

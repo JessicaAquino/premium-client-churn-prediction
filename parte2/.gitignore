@@ -1,0 +1,10 @@
+datasets/
+.venv/
+__pycache__/
+logss/
+outputs/
+logs/
+z601_gbtd.ipynb
+old/
+.venv/
+outputs_buckets/

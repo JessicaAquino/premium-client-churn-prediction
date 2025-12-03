@@ -65,7 +65,8 @@ def feature_engineering_pipeline(ctx: Context):
     feature_engineering_lag_orden_fijo(ctx, all_cols, cols_lag_delta_max_min_regl, 12)
     feature_engineering_delta_orden_fijo(ctx, all_cols, cols_lag_delta_max_min_regl, 6)
     feature_engineering_delta_orden_fijo(ctx, all_cols, cols_lag_delta_max_min_regl, 12)
-    feature_engineering_mean(ctx, all_cols, cols_lag_delta_max_min_regl, VENTANA)
+    # Sin mean, porque reventó la BD jaja
+    # feature_engineering_mean(ctx, all_cols, cols_lag_delta_max_min_regl, VENTANA)
 
     return True
 
