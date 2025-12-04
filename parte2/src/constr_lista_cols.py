@@ -15,9 +15,9 @@ def contruccion_cols(df:pd.DataFrame)->Tuple[list,list,list]:
 
     columnas_cleaned=[c for c in df.columns if not any(p in c for p in palabras_features_excluir)]
     
-    col_drops=["numero_de_cliente","foto_mes","mes","active_quarter","clase_ternaria","clase_binary,"clase_binary2","clase_weight","cliente_edad","cliente_antiguedad"
-           ,"Visa_fultimo_cierre","Visa_fultimo_cierre","Master_fultimo_cierre","Visa_Fvencimiento",
-           "Master_Fvencimiento"]
+    col_drops=["numero_de_cliente","foto_mes","mes","active_quarter","clase_ternaria","clase_binary","clase_binary2","clase_weight","cliente_edad","cliente_antiguedad",
+        "Visa_fultimo_cierre","Visa_fultimo_cierre","Master_fultimo_cierre","Visa_Fvencimiento",
+        "Master_Fvencimiento"]
  
     lista_t=[c for c in list(map(lambda x : x if x[0]=='t' and x not in col_drops else np.nan ,columnas_cleaned )) if pd.notna(c)]
     lista_c=[c for c in list(map(lambda x : x if x[0]=='c' and x not in col_drops else np.nan ,columnas_cleaned )) if pd.notna(c)]
