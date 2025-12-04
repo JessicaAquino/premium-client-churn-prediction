@@ -11,7 +11,7 @@ from src_feateng.feat_eng_armado_tablas import lanzar_feat_eng
 from src_bayesianas.bayesiana_lgbm_2 import lanzar_bayesiana_lgbm
 from src_bayesianas.bayesiana_xgb_2 import lanzar_bayesiana_xgb
 from src_experimentos.experimento_eda import lanzar_eda
-from src_experimentos.c_3_exp_0 import lanzar_experimento_lgbm
+from src_experimentos.c_3_exp_ENSAMBLE_automatico import lanzar_experimento_lgbm
 from src_experimentos.experimento_1_xgb_edited import lanzar_experimento_xgb
 
 
