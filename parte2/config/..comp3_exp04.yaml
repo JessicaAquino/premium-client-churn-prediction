@@ -55,7 +55,7 @@ configuracion_canaritos:
 
 configuracion_experimentos:
   N_EXPERIMENTO :  "..comp3_exp04"
-  N_SEMILLAS_EXP : 3
+  N_SEMILLAS_EXP : 5
   TOP_MODELS : 1 # ZS =1
   MODEL_EXP : "lgbm" #| "lgbm"
 
