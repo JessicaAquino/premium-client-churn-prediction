@@ -6,7 +6,7 @@ COMPETENCIA: 3
     # 3- bayesiana  | test_baye 
     # 4- experimento |  test_exp
     # 5- prediccion_final | test_prediccion_final |
-PROCESO_PPAL: "prediccion_final"
+PROCESO_PPAL: "experimento"
 # SUSBAMPLEO EN PORCENTAJE
 SUBSAMPLEO : 0.1 # solo para baye y exp y pred final
 
@@ -54,7 +54,7 @@ configuracion_canaritos:
 
 
 configuracion_experimentos:
-  N_EXPERIMENTO :  "..comp3_exp04"
+  N_EXPERIMENTO :  "..comp3_exp05"
   N_SEMILLAS_EXP : 3
   TOP_MODELS : 1 # ZS =1
   MODEL_EXP : "lgbm" #| "lgbm"
